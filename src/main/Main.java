@@ -4,6 +4,7 @@ import java.util.Scanner;
 import aluno.MenuAluno;
 import disciplina.MenuDisciplina;
 import professor.MenuProfessor;
+import turma.MenuTurma;
 
 public class Main {
     public static void main(String[] args) {
@@ -30,7 +31,7 @@ public class Main {
                     MenuDisciplina.exibirMenu();
                     break;
                 case 3:
-                    //MenuTurma.exibirMenu(scanner);
+                    MenuTurma.exibirMenu();
                     break;
                 case 4:
                     MenuProfessor menuProfessor = new MenuProfessor();
