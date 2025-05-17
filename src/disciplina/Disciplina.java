@@ -4,53 +4,48 @@ public class Disciplina {
     private String nome;
     private String codigo;
     private int cargaHoraria;
-    private String prerequisito;
+    private String prerequisitio;
 
-    //Construtor
     public Disciplina(String nome, String codigo, int cargaHoraria, String prerequisito) {
         this.nome = nome;
         this.codigo = codigo;
         this.cargaHoraria = cargaHoraria;
-        this.prerequisito = prerequisito;
+        this.prerequisitio = prerequisito;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public String getCodigo() {
         return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public int getCargaHoraria() {
         return cargaHoraria;
     }
 
-    public void setCargaHoraria(int cargaHoraria) {
-        this.cargaHoraria = cargaHoraria;
-    }
-
     public String getPrerequisito() {
-        return prerequisito;
+        return prerequisitio;
     }
 
-    public void setPrerequisito(String prerequisito) {
-        this.prerequisito = prerequisito;
+    //Método para salvar em formato de texto
+    //public String toString() {
+        //return nome + ";" + codigo + ";" + cargaHoraria + ";" + prerequisitio;
+    //}
+
+    //Método para ler o arquivo
+    public static Disciplina fromArquivos(String linha) {
+        String[] partes = linha.split(";");
+        String nome = partes[0];
+        String codigo = partes[1];
+        int cargaHoraria = Integer.parseInt(partes[2]);
+        String prerequisito = partes[3];
+        return new Disciplina(nome, codigo, cargaHoraria, prerequisito);
     }
 
-    //Método toString para exibir a disciplina de forma legível
     @Override
     public String toString() {
-        return "Disciplina: " + nome + " | Código: " + codigo + " | Carga Horária: " + cargaHoraria + " horas | Pré-Requisito: " + prerequisito;
+        return "Disciplina: " + nome + " | Código: " + codigo + " | Carga Horária: " + cargaHoraria + " horas | Pré-Requisito: " + prerequisitio;
     }
-
-    
 }

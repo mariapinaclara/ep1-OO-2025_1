@@ -1,8 +1,9 @@
 package main;
 
-import aluno.MenuAluno;
 import java.util.Scanner;
+import aluno.MenuAluno;
 import disciplina.MenuDisciplina;
+import professor.MenuProfessor;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,10 +13,11 @@ public class Main {
         do {
             System.out.println("\n=== MENU PRINCIPAL ===");
             System.out.println("1. Menu de Alunos");
-            System.out.println("2. Disciplinas");
-            System.out.println("3. Turmas");
-            System.out.println("4. Avaliações");
-            System.out.println("5. Frequência");
+            System.out.println("2. Menu de Disciplinas");
+            System.out.println("3. Menu de Turmas");
+            System.out.println("4. Menu de Professores");
+            System.out.println("5. Avaliações");
+            System.out.println("6. Frequência");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
@@ -25,13 +27,14 @@ public class Main {
                     MenuAluno.exibirMenu(scanner);
                     break;
                 case 2:
-                    MenuDisciplina.exibirMenu(scanner);
+                    MenuDisciplina.exibirMenu();
                     break;
                 case 3:
                     //MenuTurma.exibirMenu(scanner);
                     break;
                 case 4:
-                    //MenuAvaliacao.exibirMenu(scanner);
+                    MenuProfessor menuProfessor = new MenuProfessor();
+                    menuProfessor.exibirMenu();
                     break;
                 case 5:
                     //MenuFrequencia.exibirMenu(scanner);
