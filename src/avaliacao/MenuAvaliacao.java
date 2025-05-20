@@ -31,7 +31,7 @@ public class MenuAvaliacao {
                     lancarNota(scanner);
                     break;
                 case 0:
-                    System.out.println("Voltando ao menu principal...");
+                    System.out.println("Operação encerrada. Retornando ao menu principal.");
                     break;
                 default:
                     System.out.println("Opção inválida.");

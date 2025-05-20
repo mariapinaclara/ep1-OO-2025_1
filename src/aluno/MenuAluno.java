@@ -31,7 +31,7 @@ public class MenuAluno {
                     break;
                 case 0:
                     Aluno.salvarAlunos(alunos, ARQUIVO_ALUNOS);
-                    System.out.println("Voltando ao menu principal...");
+                    System.out.println("Operação encerrada. Retornando ao menu principal.");
                     break;
                 default:
                     System.out.println("Opção inválida.");

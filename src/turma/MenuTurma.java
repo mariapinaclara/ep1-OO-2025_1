@@ -17,7 +17,7 @@ public class MenuTurma {
             System.out.println("0. Voltar ao Menu Principal");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
-            scanner.nextLine(); // limpar buffer
+            scanner.nextLine(); 
 
             switch (opcao) {
                 case 1:
@@ -48,7 +48,7 @@ public class MenuTurma {
         System.out.print("Período (ex: 2024.1): ");
         String periodo = scanner.nextLine();
 
-        String linha = codigo + ";" + nomeDisciplina + ";" + nomeProfessor + ";" + periodo;
+        String linha = codigo + "|" + nomeDisciplina + "|" + nomeProfessor + "|" + periodo;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_TURMAS, true))) {
             writer.write(linha);

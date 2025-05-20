@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Frequencia {
     private String codigoTurma;
-    private Map<String, Integer> presencas; // matrícula aluno -> quantidade de presenças
+    private Map<String, Integer> presencas; 
 
     public Frequencia(String codigoTurma) {
         this.codigoTurma = codigoTurma;
@@ -32,7 +32,7 @@ public class Frequencia {
         try (PrintWriter pw = new PrintWriter(new FileWriter(caminhoArquivo))) {
             pw.println(codigoTurma);
             for (Map.Entry<String, Integer> entry : presencas.entrySet()) {
-                pw.println(entry.getKey() + ";" + entry.getValue());
+                pw.println(entry.getKey() + "|" + entry.getValue());
             }
         } catch (IOException e) {
             System.out.println("Erro ao salvar frequência: " + e.getMessage());

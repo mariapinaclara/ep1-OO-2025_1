@@ -43,8 +43,8 @@ public class Aluno {
     @Override
     public String toString() {
         // Formato: nome;matricula;curso;disciplina1,disciplina2,...
-        String disciplinas = String.join(",", disciplinasMatriculadas);
-        return nome + ";" + matricula + ";" + curso + ";" + disciplinas;
+        String disciplinas = String.join("|", disciplinasMatriculadas);
+        return nome + "|" + matricula + "|" + curso + "|" + disciplinas;
     }
 
     // Parse de linha para objeto Aluno

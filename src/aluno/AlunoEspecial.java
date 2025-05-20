@@ -18,6 +18,5 @@ public class AlunoEspecial extends Aluno {
     }
 
     // AlunoEspecial não recebe notas, apenas frequência
-    // Como não está no enunciado que precisa gravar algo diferente, persistência é igual ao Aluno
 }
 

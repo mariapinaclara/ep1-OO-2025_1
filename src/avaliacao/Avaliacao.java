@@ -7,7 +7,7 @@ public class Avaliacao {
     private String codigoTurma;
     private String descricao;
     private double peso;
-    private Map<String, Double> notas; // matrícula do aluno -> nota
+    private Map<String, Double> notas; 
 
     public Avaliacao(String codigoTurma, String descricao, double peso) {
         this.codigoTurma = codigoTurma;

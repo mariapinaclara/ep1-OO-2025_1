@@ -27,7 +27,7 @@ public class MenuFrequencia {
                     listarPresencas();
                     break;
                 case 0:
-                    System.out.println("Voltando ao menu principal...");
+                    System.out.println("Operação encerrada. Retornando ao menu principal.");
                     break;
                 default:
                     System.out.println("Opção inválida.");
@@ -63,7 +63,7 @@ public class MenuFrequencia {
         for (Frequencia f : frequencias) {
             System.out.println("Turma: " + f.getCodigoTurma());
             for (Map.Entry<String, Integer> entry : f.getPresencas().entrySet()) {
-                System.out.println("Aluno: " + entry.getKey() + " - Presenças: " + entry.getValue());
+                System.out.println("Aluno: " + entry.getKey() + " | Presenças: " + entry.getValue());
             }
             System.out.println("--------------------------");
         }

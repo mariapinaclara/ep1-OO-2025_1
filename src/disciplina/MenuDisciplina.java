@@ -18,7 +18,7 @@ public class MenuDisciplina {
             System.out.println("0. Voltar ao menu principal");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
-            scanner.nextLine(); // limpar buffer
+            scanner.nextLine(); 
 
             switch (opcao) {
                 case 1:
@@ -114,7 +114,7 @@ public class MenuDisciplina {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO))) {
             for (Disciplina d : disciplinas) {
-                String linha = String.format("%s;%s;%d;%s",
+                String linha = String.format("%s|%s|%d|%s",
                         d.getNome(),
                         d.getCodigo(),
                         d.getCargaHoraria(),

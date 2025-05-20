@@ -28,7 +28,7 @@ public class MenuProfessor {
             }
 
             opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpar buffer
+            scanner.nextLine(); 
 
             switch (opcao) {
                 case 1:

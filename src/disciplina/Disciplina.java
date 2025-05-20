@@ -21,7 +21,6 @@ public class Disciplina {
         this.turmas = new ArrayList<>();
     }
 
-    // Getters e Setters
     public String getNome() {
          return nome;
     }
@@ -42,7 +41,6 @@ public class Disciplina {
         turmas.add(turma);
     }
 
-    // To String para listar disciplinas
     @Override
     public String toString() {
         return "Disciplina: " + nome + " | Código: " + codigo + " | Carga Horária: " + cargaHoraria + " | Pré-Requisitos: " + preRequisitos;
