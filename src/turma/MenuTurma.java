@@ -4,82 +4,84 @@ import java.io.*;
 import java.util.Scanner;
 
 public class MenuTurma {
-    static Scanner scanner = new Scanner(System.in);
+    private static final String ARQUIVO_TURMAS = "turmas.txt";
 
     public static void exibirMenu() {
+        Scanner scanner = new Scanner(System.in);
         int opcao;
 
         do {
             System.out.println("\n=== MENU DE TURMAS ===");
-            System.out.println("1. Cadastrar nova turma");
-            System.out.println("2. Listar turmas cadastradas");
-            System.out.println("0. Voltar ao menu principal");
+            System.out.println("1. Cadastrar Turma");
+            System.out.println("2. Listar Turmas");
+            System.out.println("0. Voltar ao Menu Principal");
             System.out.print("Escolha uma opção: ");
-            opcao = Integer.parseInt(scanner.nextLine());
+            opcao = scanner.nextInt();
+            scanner.nextLine(); // limpar buffer
 
             switch (opcao) {
                 case 1:
-                    cadastrarTurma();
+                    cadastrarTurma(scanner);
                     break;
                 case 2:
                     listarTurmas();
                     break;
                 case 0:
-                    System.out.println("Voltando ao menu principal...");
                     break;
                 default:
                     System.out.println("Opção inválida.");
             }
+
         } while (opcao != 0);
     }
 
-    public static void cadastrarTurma() {
-        System.out.print("Código da turma: ");
+    private static void cadastrarTurma(Scanner scanner) {
+        System.out.print("Código da Turma: ");
         String codigo = scanner.nextLine();
 
-        System.out.print("Nome da disciplina: ");
+        System.out.print("Nome da Disciplina: ");
         String nomeDisciplina = scanner.nextLine();
 
-        System.out.print("Nome do professor: ");
+        System.out.print("Nome do Professor: ");
         String nomeProfessor = scanner.nextLine();
 
-        System.out.print("Período: ");
+        System.out.print("Período (ex: 2024.1): ");
         String periodo = scanner.nextLine();
 
-        Turma turma = new Turma(codigo, nomeDisciplina, nomeProfessor, periodo);
-        salvarTurma(turma);
-    }
+        String linha = codigo + ";" + nomeDisciplina + ";" + nomeProfessor + ";" + periodo;
 
-    public static void salvarTurma(Turma turma) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("turmas.txt", true))) {
-            String linha = turma.getCodigo() + ";" +
-                           turma.getNomeDisciplina() + ";" +
-                           turma.getNomeProfessor() + ";" +
-                           turma.getPeriodo();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_TURMAS, true))) {
             writer.write(linha);
             writer.newLine();
-            System.out.println("Turma salva com sucesso!");
+            System.out.println("Turma cadastrada com sucesso!");
         } catch (IOException e) {
             System.out.println("Erro ao salvar turma: " + e.getMessage());
         }
     }
 
-    public static void listarTurmas() {
-        File arquivo = new File("turmas.txt");
+    private static void listarTurmas() {
+        File arquivo = new File(ARQUIVO_TURMAS);
 
         if (!arquivo.exists()) {
             System.out.println("Nenhuma turma cadastrada.");
             return;
         }
 
+        System.out.println("\n=== LISTA DE TURMAS ===");
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = reader.readLine()) != null) {
-                Turma turma = Turma.fromArquivo(linha);
-                System.out.println(turma);
+                String[] partes = linha.split(";");
+                if (partes.length == 4) {
+                    System.out.println("Turma: " + partes[0] +
+                            " | Disciplina: " + partes[1] +
+                            " | Professor: " + partes[2] +
+                            " | Período: " + partes[3]);
+                }
             }
         } catch (IOException e) {
-            System.out.println("Erro ao ler arquivo: " + e.getMessage());
+            System.out.println("Erro ao ler turmas: " + e.getMessage());
         }
     }
 }
+

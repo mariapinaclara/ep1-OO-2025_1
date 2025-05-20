@@ -89,7 +89,19 @@ public class MenuProfessor {
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = reader.readLine()) != null) {
-                Professor prof = Professor.fromLinhaArquivo(linha);
+                linha = linha.trim();
+                if (linha.isEmpty()) continue;
+
+                String[] partes = linha.split(";");
+                if (partes.length < 2) {
+                    System.out.println("Linha inválida ignorada: " + linha);
+                    continue;
+                }
+
+                String nome = partes[0].trim();
+                String matricula = partes[1].trim();
+
+                Professor prof = new Professor(nome, matricula);
                 listaProfessores.add(prof);
             }
         } catch (IOException e) {

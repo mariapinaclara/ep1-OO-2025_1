@@ -2,6 +2,7 @@ package disciplina;
 
 import java.util.ArrayList;
 import java.util.List;
+import turma.*;
 
 public class Disciplina {
     private String nome;
