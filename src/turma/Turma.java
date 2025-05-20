@@ -1,45 +1,67 @@
-package turma;
+package disciplina;
 
 public class Turma {
-    private String codigo;
-    private String nomeDisciplina;
-    private String nomeProfessor;
-    private String periodo;
+    private String codigoDisciplina;  // Para relacionar com disciplina
+    private String professor;
+    private String semestre;
+    private String formaAvaliacao; // Ex: "Media Final 1" ou "Media Final 2"
+    private boolean presencial;
+    private String sala;   // Se presencial
+    private String horario;
+    private int capacidadeMaxima;
+    private int vagasDisponiveis;
 
-    public Turma(String codigo, String nomeDisciplina, String nomeProfessor, String periodo) {
-        this.codigo = codigo;
-        this.nomeDisciplina = nomeDisciplina;
-        this.nomeProfessor = nomeProfessor;
-        this.periodo = periodo;
+    public Turma(String codigoDisciplina, String professor, String semestre, String formaAvaliacao,
+                 boolean presencial, String sala, String horario, int capacidadeMaxima) {
+        this.codigoDisciplina = codigoDisciplina;
+        this.professor = professor;
+        this.semestre = semestre;
+        this.formaAvaliacao = formaAvaliacao;
+        this.presencial = presencial;
+        this.sala = presencial ? sala : "Remoto";
+        this.horario = horario;
+        this.capacidadeMaxima = capacidadeMaxima;
+        this.vagasDisponiveis = capacidadeMaxima;
     }
 
-    public String getCodigo() {
-        return codigo;
+    // Getters e setters
+    public String getCodigoDisciplina() {
+         return codigoDisciplina; 
+        }
+    public String getProfessor() { 
+        return professor; 
     }
+    public String getSemestre() {
+         return semestre; 
+        }
+    public String getFormaAvaliacao() {
+         return formaAvaliacao; 
+        }
+    public boolean isPresencial() {
+         return presencial; 
+        }
+    public String getSala() {
+         return sala; 
+        }
+    public String getHorario() {
+         return horario; 
+        }
+    public int getCapacidadeMaxima() {
+         return capacidadeMaxima; 
+        }
+    public int getVagasDisponiveis() {
+         return vagasDisponiveis; 
+        }
 
-    public String getNomeDisciplina() {
-        return nomeDisciplina;
-    }
-
-    public String getNomeProfessor() {
-        return nomeProfessor;
-    }
-
-    public String getPeriodo() {
-        return periodo;
-    }
-
-    public static Turma fromArquivo(String linha) {
-        String[] partes = linha.split(";");
-        String codigo = partes[0];
-        String nomeDisciplina = partes[1];
-        String nomeProfessor = partes[2];
-        String periodo = partes[3];
-        return new Turma(codigo, nomeDisciplina, nomeProfessor, periodo);
+    public void ocuparVaga() {
+        if (vagasDisponiveis > 0) vagasDisponiveis--;
     }
 
     @Override
     public String toString() {
-        return "Código: " + codigo + " | Disciplina: " + nomeDisciplina + " | Professor: " + nomeProfessor + " | Período: " + periodo;
+        return "Turma: " + codigoDisciplina + " | Prof: " + professor + " | Semestre: " + semestre +
+               " | Avaliação: " + formaAvaliacao + " | " + (presencial ? "Presencial" : "Remota") + " | Sala: " + sala +
+               " | Horário: " + horario + " | Vagas: " + vagasDisponiveis + "/" + capacidadeMaxima;
     }
 }
+

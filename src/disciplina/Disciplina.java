@@ -1,51 +1,49 @@
 package disciplina;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Disciplina {
     private String nome;
     private String codigo;
     private int cargaHoraria;
-    private String prerequisitio;
+    private List<String> preRequisitos;
+    
+    // Lista de turmas dessa disciplina
+    private List<Turma> turmas;
 
-    public Disciplina(String nome, String codigo, int cargaHoraria, String prerequisito) {
+    public Disciplina(String nome, String codigo, int cargaHoraria, List<String> preRequisitos) {
         this.nome = nome;
         this.codigo = codigo;
         this.cargaHoraria = cargaHoraria;
-        this.prerequisitio = prerequisito;
+        this.preRequisitos = preRequisitos != null ? preRequisitos : new ArrayList<>();
+        this.turmas = new ArrayList<>();
     }
 
+    // Getters e Setters
     public String getNome() {
-        return nome;
+         return nome;
+    }
+    public String getCodigo() { 
+        return codigo; 
+    }
+    public int getCargaHoraria() { 
+        return cargaHoraria; 
+    }
+    public List<String> getPreRequisitos() {
+         return preRequisitos; 
+    }
+    public List<Turma> getTurmas() {
+         return turmas; 
     }
 
-    public String getCodigo() {
-        return codigo;
+    public void adicionarTurma(Turma turma) {
+        turmas.add(turma);
     }
 
-    public int getCargaHoraria() {
-        return cargaHoraria;
-    }
-
-    public String getPrerequisito() {
-        return prerequisitio;
-    }
-
-    //Método para salvar em formato de texto
-    //public String toString() {
-        //return nome + ";" + codigo + ";" + cargaHoraria + ";" + prerequisitio;
-    //}
-
-    //Método para ler o arquivo
-    public static Disciplina fromArquivos(String linha) {
-        String[] partes = linha.split(";");
-        String nome = partes[0];
-        String codigo = partes[1];
-        int cargaHoraria = Integer.parseInt(partes[2]);
-        String prerequisito = partes[3];
-        return new Disciplina(nome, codigo, cargaHoraria, prerequisito);
-    }
-
+    // To String para listar disciplinas
     @Override
     public String toString() {
-        return "Disciplina: " + nome + " | Código: " + codigo + " | Carga Horária: " + cargaHoraria + " horas | Pré-Requisito: " + prerequisitio;
+        return "Disciplina: " + nome + " | Código: " + codigo + " | Carga Horária: " + cargaHoraria + " | Pré-Requisitos: " + preRequisitos;
     }
 }
