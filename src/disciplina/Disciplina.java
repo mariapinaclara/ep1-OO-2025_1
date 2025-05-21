@@ -2,15 +2,13 @@ package disciplina;
 
 import java.util.ArrayList;
 import java.util.List;
-import turma.*;
+import turma.Turma;
 
 public class Disciplina {
     private String nome;
     private String codigo;
     private int cargaHoraria;
     private List<String> preRequisitos;
-    
-    // Lista de turmas dessa disciplina
     private List<Turma> turmas;
 
     public Disciplina(String nome, String codigo, int cargaHoraria, List<String> preRequisitos) {
@@ -22,19 +20,23 @@ public class Disciplina {
     }
 
     public String getNome() {
-         return nome;
+        return nome;
     }
-    public String getCodigo() { 
-        return codigo; 
+
+    public String getCodigo() {
+        return codigo;
     }
-    public int getCargaHoraria() { 
-        return cargaHoraria; 
+
+    public int getCargaHoraria() {
+        return cargaHoraria;
     }
+
     public List<String> getPreRequisitos() {
-         return preRequisitos; 
+        return preRequisitos;
     }
+
     public List<Turma> getTurmas() {
-         return turmas; 
+        return turmas;
     }
 
     public void adicionarTurma(Turma turma) {
@@ -43,6 +45,8 @@ public class Disciplina {
 
     @Override
     public String toString() {
-        return "Disciplina: " + nome + " | Código: " + codigo + " | Carga Horária: " + cargaHoraria + " | Pré-Requisitos: " + preRequisitos;
+        return String.format("Disciplina: %s | Código: %s | Carga Horária: %d | Pré-Requisitos: %s",
+                nome, codigo, cargaHoraria, String.join(", ", preRequisitos));
     }
 }
+

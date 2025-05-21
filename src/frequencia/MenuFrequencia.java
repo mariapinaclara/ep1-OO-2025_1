@@ -1,20 +1,21 @@
 package frequencia;
 
+import java.io.File;
 import java.util.*;
 
 public class MenuFrequencia {
     private static final String PASTA_FREQUENCIA = "dados/frequencias/";
-
     private static List<Frequencia> frequencias = new ArrayList<>();
 
     public static void exibirMenu(Scanner scanner) {
-        int opcao = -1;
+        carregarTodasAsFrequencias();
 
+        int opcao;
         do {
             System.out.println("\n=== MENU DE FREQUÊNCIA ===");
             System.out.println("1. Registrar presença");
             System.out.println("2. Listar presenças");
-            System.out.println("0. Voltar");
+            System.out.println("0. Voltar ao menu principal");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
             scanner.nextLine();
@@ -27,7 +28,7 @@ public class MenuFrequencia {
                     listarPresencas();
                     break;
                 case 0:
-                    System.out.println("Operação encerrada. Retornando ao menu principal.");
+                    System.out.println("Retornando ao menu principal.");
                     break;
                 default:
                     System.out.println("Opção inválida.");
@@ -59,7 +60,8 @@ public class MenuFrequencia {
             System.out.println("Nenhuma frequência registrada.");
             return;
         }
-        System.out.println("Frequências registradas:");
+
+        System.out.println("\n=== FREQUÊNCIAS REGISTRADAS ===");
         for (Frequencia f : frequencias) {
             System.out.println("Turma: " + f.getCodigoTurma());
             for (Map.Entry<String, Integer> entry : f.getPresencas().entrySet()) {
@@ -71,10 +73,36 @@ public class MenuFrequencia {
 
     private static Frequencia buscarFrequencia(String codigoTurma) {
         for (Frequencia f : frequencias) {
-            if (f.getCodigoTurma().equals(codigoTurma)) {
+            if (f.getCodigoTurma().equalsIgnoreCase(codigoTurma)) {
                 return f;
             }
         }
-        return null;
+
+        String caminho = PASTA_FREQUENCIA + codigoTurma + ".txt";
+        Frequencia freq = Frequencia.carregar(caminho);
+        if (freq != null) {
+            frequencias.add(freq);
+        }
+        return freq;
+    }
+
+    private static void carregarTodasAsFrequencias() {
+        frequencias.clear();
+        File pasta = new File(PASTA_FREQUENCIA);
+        if (!pasta.exists()) {
+            pasta.mkdirs();
+            return;
+        }
+
+        File[] arquivos = pasta.listFiles((dir, nome) -> nome.endsWith(".txt"));
+        if (arquivos == null) return;
+
+        for (File arq : arquivos) {
+            Frequencia f = Frequencia.carregar(arq.getPath());
+            if (f != null) {
+                frequencias.add(f);
+            }
+        }
     }
 }
+

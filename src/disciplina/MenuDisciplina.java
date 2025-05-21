@@ -114,7 +114,7 @@ public class MenuDisciplina {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO))) {
             for (Disciplina d : disciplinas) {
-                String linha = String.format("%s|%s|%d|%s",
+                String linha = String.format("%s;%s;%d;%s",
                         d.getNome(),
                         d.getCodigo(),
                         d.getCargaHoraria(),
@@ -127,4 +127,5 @@ public class MenuDisciplina {
         }
     }
 }
+
 

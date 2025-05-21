@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Frequencia {
     private String codigoTurma;
-    private Map<String, Integer> presencas; 
+    private Map<String, Integer> presencas;
 
     public Frequencia(String codigoTurma) {
         this.codigoTurma = codigoTurma;
@@ -29,6 +29,11 @@ public class Frequencia {
     }
 
     public void salvar(String caminhoArquivo) {
+        File pasta = new File(caminhoArquivo).getParentFile();
+        if (!pasta.exists()) {
+            pasta.mkdirs();
+        }
+
         try (PrintWriter pw = new PrintWriter(new FileWriter(caminhoArquivo))) {
             pw.println(codigoTurma);
             for (Map.Entry<String, Integer> entry : presencas.entrySet()) {
@@ -43,16 +48,22 @@ public class Frequencia {
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String codigoTurma = br.readLine();
             if (codigoTurma == null) return null;
+
             Frequencia freq = new Frequencia(codigoTurma);
             String linha;
+
             while ((linha = br.readLine()) != null) {
-                String[] dados = linha.split(";");
-                freq.presencas.put(dados[0], Integer.parseInt(dados[1]));
+                String[] dados = linha.split("\\|");
+                if (dados.length == 2) {
+                    freq.presencas.put(dados[0], Integer.parseInt(dados[1]));
+                }
             }
+
             return freq;
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
             System.out.println("Erro ao carregar frequência: " + e.getMessage());
             return null;
         }
     }
 }
+

@@ -24,7 +24,7 @@ public class Main {
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1:
@@ -34,11 +34,10 @@ public class Main {
                     MenuDisciplina.exibirMenu(scanner);
                     break;
                 case 3:
-                    MenuTurma.exibirMenu();
+                    MenuTurma.exibirMenu(scanner);
                     break;
                 case 4:
-                    MenuProfessor menuProfessor = new MenuProfessor();
-                    menuProfessor.exibirMenu();
+                    MenuProfessor.exibirMenu(scanner);
                     break;
                 case 5:
                     MenuAvaliacao.exibirMenu(scanner);
@@ -58,4 +57,6 @@ public class Main {
         scanner.close();
     }
 }
+
+
 

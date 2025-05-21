@@ -1,34 +1,25 @@
 package professor;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-import java.io.*;
 
 public class MenuProfessor {
-    private static final String ARQUIVO = "professores.txt";
-    private ArrayList<Professor> listaProfessores = new ArrayList<>();
 
-    public MenuProfessor() {
-        carregarDoArquivo();
-    }
+    // Lista simples para guardar nomes de professores (pode trocar por objetos depois)
+    private static List<String> professores = new ArrayList<>();
 
-    public void exibirMenu() {
-        Scanner scanner = new Scanner(System.in);
+    public static void exibirMenu(Scanner scanner) {
         int opcao;
+
         do {
-            System.out.println("\n=== MENU PROFESSOR ===");
+            System.out.println("\n=== MENU DE PROFESSORES ===");
             System.out.println("1. Cadastrar Professor");
             System.out.println("2. Listar Professores");
-            System.out.println("0. Voltar");
+            System.out.println("0. Voltar ao Menu Principal");
             System.out.print("Escolha uma opção: ");
-
-            while (!scanner.hasNextInt()) {
-                System.out.print("Digite um número válido: ");
-                scanner.next();
-            }
-
             opcao = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine(); // consumir quebra de linha
 
             switch (opcao) {
                 case 1:
@@ -38,74 +29,29 @@ public class MenuProfessor {
                     listarProfessores();
                     break;
                 case 0:
-                    System.out.println("Operação concluída. Retornando ao menu principal.");
+                    System.out.println("Voltando ao menu principal...");
                     break;
                 default:
                     System.out.println("Opção inválida.");
             }
-
         } while (opcao != 0);
     }
 
-    private void cadastrarProfessor(Scanner scanner) {
-        System.out.print("Nome: ");
+    private static void cadastrarProfessor(Scanner scanner) {
+        System.out.print("Digite o nome do professor: ");
         String nome = scanner.nextLine();
-        System.out.print("Matrícula: ");
-        String matricula = scanner.nextLine();
-
-        Professor novo = new Professor(nome, matricula);
-        listaProfessores.add(novo);
-        salvarNoArquivo();
-        System.out.println("Professor cadastrado com sucesso!");
+        professores.add(nome);
+        System.out.println("Professor '" + nome + "' cadastrado com sucesso!");
     }
 
-    private void listarProfessores() {
-        if (listaProfessores.isEmpty()) {
+    private static void listarProfessores() {
+        if (professores.isEmpty()) {
             System.out.println("Nenhum professor cadastrado.");
             return;
         }
-
-        System.out.println("\n=== PROFESSORES CADASTRADOS ===");
-        for (Professor prof : listaProfessores) {
-            System.out.println(prof);
-        }
-    }
-
-    private void salvarNoArquivo() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO))) {
-            for (Professor prof : listaProfessores) {
-                writer.write(prof.toLinhaArquivo());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Erro ao salvar professores: " + e.getMessage());
-        }
-    }
-
-    private void carregarDoArquivo() {
-        File arquivo = new File(ARQUIVO);
-        if (!arquivo.exists()) return;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-            String linha;
-            while ((linha = reader.readLine()) != null) {
-                linha = linha.trim();
-                if (linha.isEmpty()) continue;
-
-                String[] partes = linha.split(";");
-                if (partes.length < 2) {
-                    System.out.println("Linha inválida ignorada: " + linha);
-                    continue;
-                }
-
-                String nome = partes[0].trim();
-                String matricula = partes[1].trim();
-
-                Professor prof = new Professor(nome, matricula);
-                listaProfessores.add(prof);
-            }
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar professores: " + e.getMessage());
+        System.out.println("\nLista de Professores:");
+        for (int i = 0; i < professores.size(); i++) {
+            System.out.println((i + 1) + ". " + professores.get(i));
         }
     }
 }
