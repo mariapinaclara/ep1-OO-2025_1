@@ -1,1 +1,2 @@
-Orienta��o a Objetos ;FGA0158;60;APC
+Orienta��o a Objetos |FGA0158|60|APC
+Calculo 1|MAT0025|80|

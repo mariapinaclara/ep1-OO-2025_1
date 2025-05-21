@@ -8,7 +8,7 @@ public class Aluno {
     private String nome;
     private String matricula;
     private String curso;
-    private List<String> disciplinasMatriculadas;
+    protected List<String> disciplinasMatriculadas;
 
     public Aluno(String nome, String matricula, String curso) {
         this.nome = nome;
@@ -17,17 +17,32 @@ public class Aluno {
         this.disciplinasMatriculadas = new ArrayList<>();
     }
 
-    // Getters e setters
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public String getNome() {
+        return nome; 
+    }
 
-    public String getMatricula() { return matricula; }
-    public void setMatricula(String matricula) { this.matricula = matricula; }
+    public void setNome(String nome) { 
+        this.nome = nome; 
+    }
 
-    public String getCurso() { return curso; }
-    public void setCurso(String curso) { this.curso = curso; }
+    public String getMatricula() { 
+        return matricula; 
+    }
+    public void setMatricula(String matricula) {
+        this.matricula = matricula; 
+    }
 
-    public List<String> getDisciplinasMatriculadas() { return disciplinasMatriculadas; }
+    public String getCurso() { 
+        return curso; 
+    }
+
+    public void setCurso(String curso) {
+        this.curso = curso; 
+    }
+
+    public List<String> getDisciplinasMatriculadas() { 
+        return disciplinasMatriculadas; 
+    }
 
     // Matricular disciplina, evitando duplicata
     public void matricularDisciplina(String codigoDisciplina) {
@@ -42,20 +57,19 @@ public class Aluno {
     // Converter objeto para linha texto para salvar em arquivo
     @Override
     public String toString() {
-        // Formato: nome;matricula;curso;disciplina1,disciplina2,...
         String disciplinas = String.join("|", disciplinasMatriculadas);
         return nome + "|" + matricula + "|" + curso + "|" + disciplinas;
     }
 
     // Parse de linha para objeto Aluno
     public static Aluno fromString(String linha) {
-        String[] partes = linha.split(";");
+        String[] partes = linha.split("\\|");
         if (partes.length < 3) return null;
 
         Aluno aluno = new Aluno(partes[0], partes[1], partes[2]);
 
         if (partes.length == 4 && !partes[3].isEmpty()) {
-            String[] disciplinas = partes[3].split(",");
+            String[] disciplinas = partes[3].split("\\|");
             aluno.disciplinasMatriculadas.addAll(Arrays.asList(disciplinas));
         }
 

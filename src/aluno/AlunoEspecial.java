@@ -1,7 +1,5 @@
 package aluno;
 
-import java.util.List;
-
 public class AlunoEspecial extends Aluno {
 
     public AlunoEspecial(String nome, String matricula, String curso) {
@@ -17,6 +15,6 @@ public class AlunoEspecial extends Aluno {
         }
     }
 
-    // AlunoEspecial não recebe notas, apenas frequência
+    
 }
 

@@ -1,15 +1,16 @@
 package avaliacao;
 
+import java.io.*;
 import java.util.*;
 
 public class MenuAvaliacao {
     private static final String PASTA_AVALIACOES = "dados/avaliacoes/";
-
     private static List<Avaliacao> avaliacoes = new ArrayList<>();
 
     public static void exibirMenu(Scanner scanner) {
-        int opcao = -1;
+        carregarAvaliacoes(); 
 
+        int opcao;
         do {
             System.out.println("\n=== MENU DE AVALIAÇÕES ===");
             System.out.println("1. Criar avaliação");
@@ -53,9 +54,8 @@ public class MenuAvaliacao {
         Avaliacao nova = new Avaliacao(codigoTurma, descricao, peso);
         avaliacoes.add(nova);
 
-        // Salvar no arquivo (nome baseado no código turma + descrição)
-        nova.salvar(PASTA_AVALIACOES + codigoTurma + "_" + descricao.replaceAll("\\s+", "_") + ".txt");
-
+        // Salvar no arquivo
+        nova.salvar(nomeArquivo(codigoTurma, descricao));
         System.out.println("Avaliação criada e salva com sucesso.");
     }
 
@@ -66,7 +66,7 @@ public class MenuAvaliacao {
         }
         System.out.println("Avaliações cadastradas:");
         for (Avaliacao av : avaliacoes) {
-            System.out.printf("Turma: %s, Descrição: %s, Peso: %.2f%n", av.getCodigoTurma(), av.getDescricao(), av.getPeso());
+            System.out.printf("Turma: %s | Descrição: %s | Peso: %.2f%n", av.getCodigoTurma(), av.getDescricao(), av.getPeso());
         }
     }
 
@@ -91,8 +91,7 @@ public class MenuAvaliacao {
         scanner.nextLine();
 
         av.lancarNota(matricula, nota);
-        av.salvar(PASTA_AVALIACOES + codigoTurma + "_" + descricao.replaceAll("\\s+", "_") + ".txt");
-
+        av.salvar(nomeArquivo(codigoTurma, descricao));
         System.out.println("Nota lançada com sucesso.");
     }
 
@@ -103,5 +102,26 @@ public class MenuAvaliacao {
             }
         }
         return null;
+    }
+
+    private static String nomeArquivo(String codigoTurma, String descricao) {
+        return PASTA_AVALIACOES + codigoTurma + "_" + descricao.replaceAll("\\s+", "_") + ".txt";
+    }
+
+    private static void carregarAvaliacoes() {
+        File pasta = new File(PASTA_AVALIACOES);
+        if (!pasta.exists()) {
+            pasta.mkdirs(); // Cria a pasta se não existir
+        }
+
+        File[] arquivos = pasta.listFiles((dir, name) -> name.endsWith(".txt"));
+        if (arquivos != null) {
+            for (File arq : arquivos) {
+                Avaliacao av = Avaliacao.carregar(arq.getPath());
+                if (av != null) {
+                    avaliacoes.add(av);
+                }
+            }
+        }
     }
 }
