@@ -19,3 +19,6 @@ Thumbs.db
 # Ignorar arquivos temporários
 *.log
 *.tmp
+
+# Ignore arquivos de dados
+dados/*.txt

@@ -1,15 +1,15 @@
 package professor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
 import java.util.Scanner;
 
 public class MenuProfessor {
+    private static final String CAMINHO_ARQUIVO = "dados/professores.txt";
 
-    // Lista simples para guardar nomes de professores (pode trocar por objetos depois)
-    private static List<String> professores = new ArrayList<>();
+    public void exibirMenu() {
+        criarPastaDadosSeNaoExistir();
 
-    public static void exibirMenu(Scanner scanner) {
+        Scanner scanner = new Scanner(System.in);
         int opcao;
 
         do {
@@ -19,7 +19,7 @@ public class MenuProfessor {
             System.out.println("0. Voltar ao Menu Principal");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
-            scanner.nextLine(); // consumir quebra de linha
+            scanner.nextLine(); // Consumir a quebra de linha
 
             switch (opcao) {
                 case 1:
@@ -29,29 +29,56 @@ public class MenuProfessor {
                     listarProfessores();
                     break;
                 case 0:
-                    System.out.println("Voltando ao menu principal...");
                     break;
                 default:
                     System.out.println("Opção inválida.");
             }
+
         } while (opcao != 0);
     }
 
-    private static void cadastrarProfessor(Scanner scanner) {
-        System.out.print("Digite o nome do professor: ");
+    private void cadastrarProfessor(Scanner scanner) {
+        System.out.print("Matrícula do Professor: ");
+        String matricula = scanner.nextLine();
+
+        System.out.print("Nome do Professor: ");
         String nome = scanner.nextLine();
-        professores.add(nome);
-        System.out.println("Professor '" + nome + "' cadastrado com sucesso!");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO, true))) {
+            writer.write(matricula + ";" + nome);
+            writer.newLine();
+            System.out.println("Professor cadastrado com sucesso!");
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar professor: " + e.getMessage());
+        }
     }
 
-    private static void listarProfessores() {
-        if (professores.isEmpty()) {
+    private void listarProfessores() {
+        File arquivo = new File(CAMINHO_ARQUIVO);
+
+        if (!arquivo.exists()) {
             System.out.println("Nenhum professor cadastrado.");
             return;
         }
-        System.out.println("\nLista de Professores:");
-        for (int i = 0; i < professores.size(); i++) {
-            System.out.println((i + 1) + ". " + professores.get(i));
+
+        System.out.println("\n=== LISTA DE PROFESSORES ===");
+        try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                String[] partes = linha.split(";");
+                if (partes.length == 2) {
+                    System.out.println("Matrícula: " + partes[0] + " | Nome: " + partes[1]);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao ler professores: " + e.getMessage());
+        }
+    }
+
+    private void criarPastaDadosSeNaoExistir() {
+        File pasta = new File("dados");
+        if (!pasta.exists()) {
+            pasta.mkdir();
         }
     }
 }
