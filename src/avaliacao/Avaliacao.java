@@ -43,9 +43,9 @@ public class Avaliacao {
     // Salvar avaliações em arquivo
     public void salvar(String caminhoArquivo) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(caminhoArquivo))) {
-            pw.println(codigoTurma + ";" + descricao + ";" + peso);
+            pw.println(codigoTurma + "|" + descricao + "|" + peso);
             for (Map.Entry<String, Double> entry : notas.entrySet()) {
-                pw.println(entry.getKey() + ";" + entry.getValue());
+                pw.println(entry.getKey() + "|" + entry.getValue());
             }
         } catch (IOException e) {
             System.out.println("Erro ao salvar avaliação: " + e.getMessage());

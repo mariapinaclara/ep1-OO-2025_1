@@ -1,30 +1,25 @@
 package professor;
 
-import java.io.Serializable;
-
-public class Professor implements Serializable {
+public class Professor {
     private String nome;
-    private String matricula;
+    private String usuario; 
 
-    public Professor(String nome, String matricula) {
+    public Professor(String nome, String usuario) {
         this.nome = nome;
-        this.matricula = matricula;
+        this.usuario = usuario;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public String getMatricula() {
-        return matricula;
-    }
-
-    public String toLinhaArquivo() {
-        return nome + ";" + matricula;
+    public String getUsuario() {
+        return usuario;
     }
 
     @Override
     public String toString() {
-        return "Nome: " + nome + " | Matrícula: " + matricula;
+        return "Nome: " + nome + "| Usuário: " + usuario;
     }
 }
+

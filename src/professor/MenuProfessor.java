@@ -1,25 +1,27 @@
 package professor;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuProfessor {
-    private static final String CAMINHO_ARQUIVO = "dados/professores.txt";
 
-    public void exibirMenu() {
-        criarPastaDadosSeNaoExistir();
+    private static final String ARQUIVO_PROFESSORES = "dados/professores.txt";
+    private static List<Professor> professores = new ArrayList<>();
 
-        Scanner scanner = new Scanner(System.in);
+    public static void exibirMenu(Scanner scanner) {
+        carregarProfessores();
         int opcao;
 
         do {
-            System.out.println("\n=== MENU DE PROFESSORES ===");
-            System.out.println("1. Cadastrar Professor");
-            System.out.println("2. Listar Professores");
-            System.out.println("0. Voltar ao Menu Principal");
+            System.out.println("\n=== MENU PROFESSORES ===");
+            System.out.println("1. Cadastrar professor");
+            System.out.println("2. Listar professores");
+            System.out.println("0. Voltar ao menu principal");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
-            scanner.nextLine(); // Consumir a quebra de linha
+            scanner.nextLine(); 
 
             switch (opcao) {
                 case 1:
@@ -29,56 +31,68 @@ public class MenuProfessor {
                     listarProfessores();
                     break;
                 case 0:
+                    salvarProfessores();
+                    System.out.println("Operação encerrada. Retornando ao menu principal.");
                     break;
                 default:
                     System.out.println("Opção inválida.");
             }
-
         } while (opcao != 0);
     }
 
-    private void cadastrarProfessor(Scanner scanner) {
-        System.out.print("Matrícula do Professor: ");
-        String matricula = scanner.nextLine();
-
-        System.out.print("Nome do Professor: ");
+    private static void cadastrarProfessor(Scanner scanner) {
+        System.out.print("Digite o nome do professor: ");
         String nome = scanner.nextLine();
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO, true))) {
-            writer.write(matricula + ";" + nome);
-            writer.newLine();
-            System.out.println("Professor cadastrado com sucesso!");
-        } catch (IOException e) {
-            System.out.println("Erro ao salvar professor: " + e.getMessage());
+        System.out.print("Digite o usuário do professor: ");
+        String usuario = scanner.nextLine();
+
+        Professor professor = new Professor(nome, usuario);
+        professores.add(professor);
+        System.out.println("Professor cadastrado com sucesso.");
+    }
+
+    private static void listarProfessores() {
+        if (professores.isEmpty()) {
+            System.out.println("Nenhum professor cadastrado.");
+        } else {
+            System.out.println("\n=== Lista de Professores ===");
+            for (Professor professor : professores) {
+                System.out.println(professor);
+            }
         }
     }
 
-    private void listarProfessores() {
-        File arquivo = new File(CAMINHO_ARQUIVO);
+    private static void salvarProfessores() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_PROFESSORES))) {
+            for (Professor professor : professores) {
+                writer.write(professor.getNome() + "|" + professor.getUsuario());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar professores: " + e.getMessage());
+        }
+    }
+
+    private static void carregarProfessores() {
+        professores.clear();
+        File arquivo = new File(ARQUIVO_PROFESSORES);
 
         if (!arquivo.exists()) {
-            System.out.println("Nenhum professor cadastrado.");
             return;
         }
 
-        System.out.println("\n=== LISTA DE PROFESSORES ===");
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = reader.readLine()) != null) {
-                String[] partes = linha.split(";");
-                if (partes.length == 2) {
-                    System.out.println("Matrícula: " + partes[0] + " | Nome: " + partes[1]);
+                String[] dados = linha.split(",");
+                if (dados.length == 3) {
+                    Professor professor = new Professor(dados[0], dados[1]);
+                    professores.add(professor);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Erro ao ler professores: " + e.getMessage());
-        }
-    }
-
-    private void criarPastaDadosSeNaoExistir() {
-        File pasta = new File("dados");
-        if (!pasta.exists()) {
-            pasta.mkdir();
+            System.out.println("Erro ao carregar professores: " + e.getMessage());
         }
     }
 }

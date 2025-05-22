@@ -46,7 +46,7 @@ public class MenuDisciplina {
 
         System.out.print("Carga horária (em horas): ");
         int cargaHoraria = scanner.nextInt();
-        scanner.nextLine(); // limpar buffer
+        scanner.nextLine(); 
 
         System.out.print("Pré-requisitos (separados por vírgula, ou deixe em branco): ");
         String preReqStr = scanner.nextLine();
@@ -114,7 +114,7 @@ public class MenuDisciplina {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO))) {
             for (Disciplina d : disciplinas) {
-                String linha = String.format("%s;%s;%d;%s",
+                String linha = String.format("%s|%s|%d|%s",
                         d.getNome(),
                         d.getCodigo(),
                         d.getCargaHoraria(),

@@ -45,7 +45,7 @@ public class Turma {
     }
 
     public String toString() {
-        return codigo + ";" + codigoDisciplina + ";" + matriculaProfessor + ";" + modalidade + ";" + cargaHoraria + ";" + tipoMedia;
+        return codigo + "|" + codigoDisciplina + "|" + matriculaProfessor + "|" + modalidade + "|" + cargaHoraria + "|" + tipoMedia;
     }
 
     public static List<Turma> carregarTurmas() {

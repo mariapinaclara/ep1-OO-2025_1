@@ -81,7 +81,7 @@ public class MenuAluno {
         System.out.println("\nLista de alunos:");
         for (Aluno aluno : alunos) {
             String tipo = (aluno instanceof AlunoEspecial) ? "Especial" : "Normal";
-            System.out.println("Tipo: " + tipo + " | Nome: " + aluno.getNome() + ", Matrícula: " + aluno.getMatricula() + ", Curso: " + aluno.getCurso());
+            System.out.println("Tipo: " + tipo + " | Nome: " + aluno.getNome() + " | Matrícula: " + aluno.getMatricula() + ", Curso: " + aluno.getCurso());
             if (!aluno.getDisciplinasMatriculadas().isEmpty()) {
                 System.out.println("  Disciplinas matriculadas: " + String.join(", ", aluno.getDisciplinasMatriculadas()));
             }

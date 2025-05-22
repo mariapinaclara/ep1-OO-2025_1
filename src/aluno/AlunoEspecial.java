@@ -13,8 +13,6 @@ public class AlunoEspecial extends Aluno {
         } else {
             System.out.println("Aluno Especial só pode cursar no máximo 2 disciplinas.");
         }
-    }
-
-    
+    }  
 }
 
