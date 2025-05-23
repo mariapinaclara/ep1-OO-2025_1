@@ -8,6 +8,8 @@ import java.util.Scanner;
 public class MenuProfessor {
 
     private static final String ARQUIVO_PROFESSORES = "dados/professores.txt";
+    private static final String SEPARADOR = "\\|"; // Usado para leitura
+    private static final String SEPARADOR_SAIDA = "|"; // Usado para escrita
     private static List<Professor> professores = new ArrayList<>();
 
     public static void exibirMenu(Scanner scanner) {
@@ -21,7 +23,7 @@ public class MenuProfessor {
             System.out.println("0. Voltar ao menu principal");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1:
@@ -66,7 +68,7 @@ public class MenuProfessor {
     private static void salvarProfessores() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_PROFESSORES))) {
             for (Professor professor : professores) {
-                writer.write(professor.getNome() + "|" + professor.getUsuario());
+                writer.write(professor.getNome() + SEPARADOR_SAIDA + professor.getUsuario());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -85,8 +87,8 @@ public class MenuProfessor {
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = reader.readLine()) != null) {
-                String[] dados = linha.split(",");
-                if (dados.length == 3) {
+                String[] dados = linha.split(SEPARADOR);
+                if (dados.length == 2) {
                     Professor professor = new Professor(dados[0], dados[1]);
                     professores.add(professor);
                 }

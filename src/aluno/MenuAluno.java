@@ -2,21 +2,24 @@ package aluno;
 
 import java.util.List;
 import java.util.Scanner;
+import java.io.File;
 
 public class MenuAluno {
 
     private static List<Aluno> alunos;
-    private static final String ARQUIVO_ALUNOS = "alunos.txt";
+    private static final String ARQUIVO_ALUNOS = "dados/alunos.txt";
 
     public static void exibirMenu(Scanner scanner) {
+        verificarDiretorio(); // Garante que a pasta "dados" exista
+
         alunos = Aluno.carregarAlunos(ARQUIVO_ALUNOS);
 
-        int opcao = -1;
+        int opcao;
 
         do {
             System.out.println("\n=== MENU DE ALUNOS ===");
             System.out.println("1. Cadastrar aluno(a)");
-            System.out.println("2. Listar alunos(a)");
+            System.out.println("2. Listar alunos(as)");
             System.out.println("0. Voltar ao principal");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
@@ -49,7 +52,6 @@ public class MenuAluno {
         System.out.print("Curso: ");
         String curso = scanner.nextLine();
 
-        // Escolher tipo de aluno
         System.out.print("Aluno Especial? (s/n): ");
         String especial = scanner.nextLine();
 
@@ -81,11 +83,19 @@ public class MenuAluno {
         System.out.println("\nLista de alunos:");
         for (Aluno aluno : alunos) {
             String tipo = (aluno instanceof AlunoEspecial) ? "Especial" : "Normal";
-            System.out.println("Tipo: " + tipo + " | Nome: " + aluno.getNome() + " | Matrícula: " + aluno.getMatricula() + ", Curso: " + aluno.getCurso());
+            System.out.println("Tipo: " + tipo + " | Nome: " + aluno.getNome() + " | Matrícula: " + aluno.getMatricula() + " | Curso: " + aluno.getCurso());
             if (!aluno.getDisciplinasMatriculadas().isEmpty()) {
                 System.out.println("  Disciplinas matriculadas: " + String.join(", ", aluno.getDisciplinasMatriculadas()));
             }
         }
     }
+
+    private static void verificarDiretorio() {
+        File dir = new File("dados");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+    }
 }
+
 

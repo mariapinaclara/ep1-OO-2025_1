@@ -5,6 +5,8 @@ import java.util.*;
 
 public class MenuDisciplina {
     private static final String CAMINHO_ARQUIVO = "dados/disciplinas.txt";
+    private static final String SEPARADOR = "\\|"; // Para leitura
+    private static final String SEPARADOR_SAIDA = "|"; // Para escrita
     private static List<Disciplina> disciplinas = new ArrayList<>();
 
     public static void exibirMenu(Scanner scanner) {
@@ -83,7 +85,7 @@ public class MenuDisciplina {
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = reader.readLine()) != null) {
-                String[] partes = linha.split(";");
+                String[] partes = linha.split(SEPARADOR);
                 if (partes.length >= 3) {
                     String nome = partes[0];
                     String codigo = partes[1];
@@ -114,10 +116,10 @@ public class MenuDisciplina {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO))) {
             for (Disciplina d : disciplinas) {
-                String linha = String.format("%s|%s|%d|%s",
-                        d.getNome(),
-                        d.getCodigo(),
-                        d.getCargaHoraria(),
+                String linha = String.format("%s%s%s%s%d%s%s",
+                        d.getNome(), SEPARADOR_SAIDA,
+                        d.getCodigo(), SEPARADOR_SAIDA,
+                        d.getCargaHoraria(), SEPARADOR_SAIDA,
                         String.join(",", d.getPreRequisitos()));
                 writer.write(linha);
                 writer.newLine();
@@ -127,5 +129,3 @@ public class MenuDisciplina {
         }
     }
 }
-
-
