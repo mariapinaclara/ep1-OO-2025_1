@@ -1,34 +1,49 @@
-package turma;
+package turma; 
 
-import java.io.*;
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
+import aluno.Aluno; 
+import disciplina.Disciplina; 
+import professor.Professor; 
 
 public class MenuTurma {
-    private static final String CAMINHO_ARQUIVO = "dados/turmas.txt";
-    private static List<Turma> turmas = new ArrayList<>();
+    private Scanner scanner;
+    private List<Turma> turmas;
+    private List<Aluno> alunos; 
+    private List<Disciplina> disciplinas; 
+    private List<Professor> professores; 
 
-    public static void exibirMenu(Scanner scanner) {
-        carregarTurmas();
+    public MenuTurma(Scanner scanner, List<Turma> turmas, List<Aluno> alunos, List<Disciplina> disciplinas, List<Professor> professores) {
+        this.scanner = scanner;
+        this.turmas = turmas;
+        this.alunos = alunos;
+        this.disciplinas = disciplinas;
+        this.professores = professores;
+    }
+
+    public void exibirMenu() {
         int opcao;
         do {
-            System.out.println("\n=== Menu de Turmas ===");
-            System.out.println("1. Cadastrar turma");
-            System.out.println("2. Listar turmas");
-            System.out.println("0. Voltar ao menu principal");
+            System.out.println("\n=== MENU DE TURMAS ===");
+            System.out.println("1. Cadastrar Turma");
+            System.out.println("2. Listar Turmas");
+            System.out.println("3. Matricular Aluno em Turma"); 
+            System.out.println("0. Voltar");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); 
 
             switch (opcao) {
                 case 1:
-                    cadastrarTurma(scanner);
+                    cadastrarTurma();
                     break;
                 case 2:
                     listarTurmas();
                     break;
+                case 3:
+                    matricularAlunoEmTurma(); 
+                    break;
                 case 0:
-                    salvarTurmas();
-                    System.out.println("Operação encerrada. Retornando ao menu principal.");
                     break;
                 default:
                     System.out.println("Opção inválida.");
@@ -36,89 +51,119 @@ public class MenuTurma {
         } while (opcao != 0);
     }
 
-    private static void cadastrarTurma(Scanner scanner) {
-        System.out.print("Código da turma: ");
+    private void cadastrarTurma() {
+        System.out.print("Código da Turma: ");
         String codigo = scanner.nextLine();
 
-        System.out.print("Código da disciplina: ");
-        String codDisc = scanner.nextLine();
+        boolean codigoTurmaExistente = false;
+        for (Turma t : turmas) {
+            if (t.getCodigo().equalsIgnoreCase(codigo)) {
+                codigoTurmaExistente = true;
+                break;
+            }
+        }
 
-        System.out.print("Matrícula do professor: ");
-        String matricula = scanner.nextLine();
+        if (codigoTurmaExistente) {
+            System.out.println("Erro: Já existe uma turma com este código.");
+            return;
+        }
+
+        System.out.print("Código da Disciplina: ");
+        String codigoDisciplina = scanner.nextLine();
+        
+        Disciplina disciplinaEncontrada = null;
+        for (Disciplina d : disciplinas) {
+            if (d.getCodigo().equalsIgnoreCase(codigoDisciplina)) {
+                disciplinaEncontrada = d;
+                break;
+            }
+        }
+        if (disciplinaEncontrada == null) {
+            System.out.println("Erro: Disciplina não encontrada. Cadastre a disciplina primeiro.");
+            return;
+        }
+
+        System.out.print("Matrícula do Professor: ");
+        String matriculaProfessor = scanner.nextLine();
+       
+        Professor professorEncontrado = null;
+        for (Professor p : professores) {
+            if (p.getMatricula().equalsIgnoreCase(matriculaProfessor)) {
+                professorEncontrado = p;
+                break;
+            }
+        }
+        if (professorEncontrado == null) {
+            System.out.println("Erro: Professor não encontrado. Cadastre o professor primeiro.");
+            return;
+        }
 
         System.out.print("Modalidade (Presencial/Remota): ");
         String modalidade = scanner.nextLine();
-
-        System.out.print("Carga horária: ");
-        int carga = scanner.nextInt();
-
-        System.out.print("Tipo de média (1 ou 2): ");
+        System.out.print("Carga Horária: ");
+        int cargaHoraria = scanner.nextInt();
+        System.out.print("Tipo de Média (1 para Tipo A, 2 para Tipo B): ");
         int tipoMedia = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); 
 
-        Turma turma = new Turma(codigo, codDisc, matricula, modalidade, carga, tipoMedia);
-        turmas.add(turma);
-        salvarTurmas();
+        Turma novaTurma = new Turma(codigo, codigoDisciplina, matriculaProfessor, modalidade, cargaHoraria, tipoMedia);
+        this.turmas.add(novaTurma);
         System.out.println("Turma cadastrada com sucesso!");
     }
 
-    private static void listarTurmas() {
+    private void listarTurmas() {
         if (turmas.isEmpty()) {
             System.out.println("Nenhuma turma cadastrada.");
-        } else {
-            System.out.println("\n=== Lista de Turmas ===");
-            for (Turma turma : turmas) {
-                System.out.println(turma);
-            }
+            return;
         }
-    }
-
-    private static void salvarTurmas() {
-        File pasta = new File("dados");
-        if (!pasta.exists()) {
-            pasta.mkdir();
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO))) {
-            for (Turma turma : turmas) {
-                writer.write(String.format("%s|%s|%s|%s|%d|%d",
-                        turma.getCodigo(),
-                        turma.getCodigoDisciplina(),
-                        turma.getMatriculaProfessor(),
-                        turma.getModalidade(),
-                        turma.getCargaHoraria(),
-                        turma.getTipoMedia()));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Erro ao salvar turmas: " + e.getMessage());
-        }
-    }
-
-    private static void carregarTurmas() {
-        turmas.clear();
-        File arquivo = new File(CAMINHO_ARQUIVO);
-        if (!arquivo.exists()) return;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-            String linha;
-            while ((linha = reader.readLine()) != null) {
-                String[] partes = linha.split("\\|");
-                if (partes.length == 6) {
-                    String codigo = partes[0];
-                    String codDisc = partes[1];
-                    String matricula = partes[2];
-                    String modalidade = partes[3];
-                    int carga = Integer.parseInt(partes[4]);
-                    int tipoMedia = Integer.parseInt(partes[5]);
-
-                    Turma turma = new Turma(codigo, codDisc, matricula, modalidade, carga, tipoMedia);
-                    turmas.add(turma);
+        System.out.println("\n=== Lista de Turmas ===");
+        for (Turma t : turmas) {
+            System.out.println("Código: " + t.getCodigo() + " |Disciplina: " + t.getCodigoDisciplina() + " | Professor: " + t.getMatriculaProfessor() + " | Modalidade: " + t.getModalidade() + " | Carga Horária: " + t.getCargaHoraria() + " | Tipo Média: " + t.getTipoMedia());
+           
+            if (!t.getAlunosMatriculados().isEmpty()) {
+                System.out.print("  Alunos Matriculados: ");
+                for (Aluno a : t.getAlunosMatriculados()) {
+                    System.out.print(a.getNome() + " (" + a.getMatricula() + "); ");
                 }
+                System.out.println();
+            } else {
+                System.out.println("  Nenhum aluno matriculado nesta turma.");
             }
-        } catch (IOException | NumberFormatException e) {
-            System.out.println("Erro ao carregar turmas: " + e.getMessage());
         }
+    }
+
+    private void matricularAlunoEmTurma() {
+        System.out.print("Matrícula do Aluno a ser matriculado: ");
+        String matriculaAluno = scanner.nextLine();
+
+        Aluno alunoEncontrado = null;
+        for (Aluno a : alunos) {
+            if (a.getMatricula().equalsIgnoreCase(matriculaAluno)) {
+                alunoEncontrado = a;
+                break;
+            }
+        }
+        if (alunoEncontrado == null) {
+            System.out.println("Erro: Aluno não encontrado.");
+            return;
+        }
+
+        System.out.print("Código da Turma para matricular: ");
+        String codigoTurma = scanner.nextLine();
+
+        Turma turmaEncontrada = null;
+        for (Turma t : turmas) {
+            if (t.getCodigo().equalsIgnoreCase(codigoTurma)) {
+                turmaEncontrada = t;
+                break;
+            }
+        }
+        if (turmaEncontrada == null) {
+            System.out.println("Erro: Turma não encontrada.");
+            return;
+        }
+
+        turmaEncontrada.matricularAluno(alunoEncontrado);
     }
 }
 

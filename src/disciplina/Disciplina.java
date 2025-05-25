@@ -1,52 +1,56 @@
 package disciplina;
 
-import java.util.ArrayList;
-import java.util.List;
-import turma.Turma;
-
 public class Disciplina {
-    private String nome;
     private String codigo;
-    private int cargaHoraria;
-    private List<String> preRequisitos;
-    private List<Turma> turmas;
+    private String nome;
+    private int creditos;
 
-    public Disciplina(String nome, String codigo, int cargaHoraria, List<String> preRequisitos) {
-        this.nome = nome;
+    public Disciplina(String codigo, String nome, int creditos) {
         this.codigo = codigo;
-        this.cargaHoraria = cargaHoraria;
-        this.preRequisitos = preRequisitos != null ? preRequisitos : new ArrayList<>();
-        this.turmas = new ArrayList<>();
-    }
-
-    public String getNome() {
-        return nome;
+        this.nome = nome;
+        this.creditos = creditos;
     }
 
     public String getCodigo() {
         return codigo;
     }
 
-    public int getCargaHoraria() {
-        return cargaHoraria;
+    public void setCodigo(String codigo) { 
+        this.codigo = codigo;
     }
 
-    public List<String> getPreRequisitos() {
-        return preRequisitos;
+    public String getNome() {
+        return nome;
     }
 
-    public List<Turma> getTurmas() {
-        return turmas;
+    public void setNome(String nome) { 
+        this.nome = nome;
     }
 
-    public void adicionarTurma(Turma turma) {
-        turmas.add(turma);
+    public int getCreditos() {
+        return creditos;
+    }
+
+    public void setCreditos(int creditos) { 
+        this.creditos = creditos;
     }
 
     @Override
     public String toString() {
-        return String.format("Disciplina: %s | Código: %s | Carga Horária: %d | Pré-Requisitos: %s",
-                nome, codigo, cargaHoraria, String.join(", ", preRequisitos));
+        return codigo + "|" + nome + "|" + creditos;
+    }
+
+    public static Disciplina fromString(String linha) {
+        String[] partes = linha.split("\\|");
+        if (partes.length != 3) {
+            System.err.println("Formato de linha inválido para Disciplina: " + linha);
+            return null;
+        }
+        try {
+            return new Disciplina(partes[0], partes[1], Integer.parseInt(partes[2]));
+        } catch (NumberFormatException e) {
+            System.err.println("Erro ao converter créditos da disciplina: " + e.getMessage() + " na linha: " + linha);
+            return null;
+        }
     }
 }
-

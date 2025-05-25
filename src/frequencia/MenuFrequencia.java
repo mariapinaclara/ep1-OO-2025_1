@@ -1,108 +1,115 @@
-package frequencia;
+package frequencia; 
 
-import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
+import aluno.Aluno;
+import aluno.HistoricoAcademicoTurma; 
+import turma.Turma;
 
-public class MenuFrequencia {
-    private static final String PASTA_FREQUENCIA = "dados/frequencias/";
-    private static List<Frequencia> frequencias = new ArrayList<>();
+public class MenuFrequencia { 
+    private Scanner scanner;
+    private List<Aluno> alunos;
+    private List<Turma> turmas;
+    private List<HistoricoAcademicoTurma> historicosAcademicos; 
 
-    public static void exibirMenu(Scanner scanner) {
-        carregarTodasAsFrequencias();
+    public MenuFrequencia(Scanner scanner, List<Aluno> alunos, List<Turma> turmas, List<HistoricoAcademicoTurma> historicosAcademicos) {
+        this.scanner = scanner;
+        this.alunos = alunos;
+        this.turmas = turmas;
+        this.historicosAcademicos = historicosAcademicos;
+    }
 
-        int opcao;
+    public void exibirMenu() {
+        System.out.println("\n=== Lançar Notas e Gerenciar Faltas ===");
+        System.out.print("Digite a matrícula do aluno: ");
+        String matriculaAluno = scanner.nextLine();
+
+        System.out.print("Digite o código da turma: ");
+        String codigoTurma = scanner.nextLine();
+
+        Aluno aluno = encontrarAlunoPorMatricula(matriculaAluno);
+        Turma turma = encontrarTurmaPorCodigo(codigoTurma);
+
+        if (aluno == null) {
+            System.out.println("Erro: Aluno não encontrado.");
+            return;
+        }
+        if (turma == null) {
+            System.out.println("Erro: Turma não encontrada.");
+            return;
+        }
+
+        boolean alunoMatriculadoNaTurma = false;
+        if (turma.getAlunosMatriculados() != null) {
+            for (Aluno a : turma.getAlunosMatriculados()) {
+                if (a.getMatricula().equals(matriculaAluno)) {
+                    alunoMatriculadoNaTurma = true;
+                    break;
+                }
+            }
+        }
+
+        if (!alunoMatriculadoNaTurma) {
+            System.out.println("Erro: Aluno não está matriculado nesta turma. Matricule-o primeiro.");
+            return;
+        }
+
+        HistoricoAcademicoTurma historico = aluno.getHistoricoTurma(codigoTurma);
+        if (historico == null) {
+            historico = new HistoricoAcademicoTurma(matriculaAluno, codigoTurma, turma.getCargaHoraria());
+            aluno.adicionarHistoricoTurma(codigoTurma, historico);
+            this.historicosAcademicos.add(historico); 
+            System.out.println("Aviso: Histórico acadêmico para este aluno e turma criado agora.");
+        }
+
+        int subOpcao;
         do {
-            System.out.println("\n=== MENU DE FREQUÊNCIA ===");
-            System.out.println("1. Registrar presença");
-            System.out.println("2. Listar presenças");
-            System.out.println("0. Voltar ao menu principal");
+            System.out.println("\n=== Operações para " + aluno.getNome() + " na Turma " + turma.getCodigo() + " ===");
+            System.out.println("1. Lançar Nota");
+            System.out.println("2. Registrar Falta");
+            System.out.println("0. Voltar");
             System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine();
+            subOpcao = scanner.nextInt();
+            scanner.nextLine(); 
 
-            switch (opcao) {
+            switch (subOpcao) {
                 case 1:
-                    registrarPresenca(scanner);
+                    System.out.print("Tipo da nota (P1, P2, P3, L, S): ");
+                    String tipoNota = scanner.nextLine();
+                    System.out.print("Valor da nota: ");
+                    double valorNota = scanner.nextDouble();
+                    scanner.nextLine(); 
+                    historico.adicionarNota(tipoNota, valorNota);
+                    System.out.println("Nota lançada com sucesso!");
                     break;
                 case 2:
-                    listarPresencas();
+                    historico.adicionarFalta();
+                    System.out.println("Falta registrada. Total de faltas: " + historico.getFaltas());
                     break;
                 case 0:
-                    System.out.println("Retornando ao menu principal.");
                     break;
                 default:
                     System.out.println("Opção inválida.");
             }
-        } while (opcao != 0);
+        } while (subOpcao != 0);
     }
 
-    private static void registrarPresenca(Scanner scanner) {
-        System.out.print("Código da turma: ");
-        String codigoTurma = scanner.nextLine();
-
-        Frequencia freq = buscarFrequencia(codigoTurma);
-        if (freq == null) {
-            freq = new Frequencia(codigoTurma);
-            frequencias.add(freq);
-        }
-
-        System.out.print("Matrícula do aluno: ");
-        String matricula = scanner.nextLine();
-
-        freq.registrarPresenca(matricula);
-        freq.salvar(PASTA_FREQUENCIA + codigoTurma + ".txt");
-
-        System.out.println("Presença registrada com sucesso.");
-    }
-
-    private static void listarPresencas() {
-        if (frequencias.isEmpty()) {
-            System.out.println("Nenhuma frequência registrada.");
-            return;
-        }
-
-        System.out.println("\n=== FREQUÊNCIAS REGISTRADAS ===");
-        for (Frequencia f : frequencias) {
-            System.out.println("Turma: " + f.getCodigoTurma());
-            for (Map.Entry<String, Integer> entry : f.getPresencas().entrySet()) {
-                System.out.println("Aluno: " + entry.getKey() + " | Presenças: " + entry.getValue());
-            }
-            System.out.println("--------------------------");
-        }
-    }
-
-    private static Frequencia buscarFrequencia(String codigoTurma) {
-        for (Frequencia f : frequencias) {
-            if (f.getCodigoTurma().equalsIgnoreCase(codigoTurma)) {
-                return f;
+    private Aluno encontrarAlunoPorMatricula(String matricula) {
+        for (Aluno a : alunos) {
+            if (a.getMatricula().equals(matricula)) {
+                return a;
             }
         }
-
-        String caminho = PASTA_FREQUENCIA + codigoTurma + ".txt";
-        Frequencia freq = Frequencia.carregar(caminho);
-        if (freq != null) {
-            frequencias.add(freq);
-        }
-        return freq;
+        return null;
     }
 
-    private static void carregarTodasAsFrequencias() {
-        frequencias.clear();
-        File pasta = new File(PASTA_FREQUENCIA);
-        if (!pasta.exists()) {
-            pasta.mkdirs();
-            return;
-        }
-
-        File[] arquivos = pasta.listFiles((dir, nome) -> nome.endsWith(".txt"));
-        if (arquivos == null) return;
-
-        for (File arq : arquivos) {
-            Frequencia f = Frequencia.carregar(arq.getPath());
-            if (f != null) {
-                frequencias.add(f);
+    private Turma encontrarTurmaPorCodigo(String codigo) {
+        for (Turma t : turmas) {
+            if (t.getCodigo().equals(codigo)) {
+                return t;
             }
         }
+        return null;
     }
 }
 

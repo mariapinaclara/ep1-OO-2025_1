@@ -1,50 +1,51 @@
 package aluno;
 
-import java.io.*;
 import java.util.*;
 
 public class Aluno {
-
     private String nome;
     private String matricula;
     private String curso;
     protected List<String> disciplinasMatriculadas;
+    // Mapa para armazenar o histórico do aluno em cada turma
+    private Map<String, HistoricoAcademicoTurma> historicosPorTurma;
 
     public Aluno(String nome, String matricula, String curso) {
         this.nome = nome;
         this.matricula = matricula;
         this.curso = curso;
         this.disciplinasMatriculadas = new ArrayList<>();
+        this.historicosPorTurma = new HashMap<>(); // Inicialize o novo mapa
     }
 
     public String getNome() {
-        return nome; 
+        return nome;
     }
 
-    public void setNome(String nome) { 
-        this.nome = nome; 
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getMatricula() { 
-        return matricula; 
+    public String getMatricula() {
+        return matricula;
     }
+
     public void setMatricula(String matricula) {
-        this.matricula = matricula; 
+        this.matricula = matricula;
     }
 
-    public String getCurso() { 
-        return curso; 
+    public String getCurso() {
+        return curso;
     }
 
     public void setCurso(String curso) {
-        this.curso = curso; 
+        this.curso = curso;
     }
 
-    public List<String> getDisciplinasMatriculadas() { 
-        return disciplinasMatriculadas; 
+    public List<String> getDisciplinasMatriculadas() {
+        return new ArrayList<>(disciplinasMatriculadas); // Retorna uma cópia para segurança
     }
 
-    // Matricular disciplina, evitando duplicata
     public void matricularDisciplina(String codigoDisciplina) {
         if (!disciplinasMatriculadas.contains(codigoDisciplina)) {
             disciplinasMatriculadas.add(codigoDisciplina);
@@ -54,59 +55,41 @@ public class Aluno {
         }
     }
 
-    // Converter objeto para linha texto para salvar em arquivo
+    public void adicionarHistoricoTurma(String idTurma, HistoricoAcademicoTurma historico) {
+        this.historicosPorTurma.put(idTurma, historico);
+    }
+
+    public HistoricoAcademicoTurma getHistoricoTurma(String idTurma) {
+        return historicosPorTurma.get(idTurma);
+    }
+
+    public Map<String, HistoricoAcademicoTurma> getHistoricosAcademicos() { 
+        return historicosPorTurma;
+    }
+
     @Override
     public String toString() {
-        String disciplinas = String.join("|", disciplinasMatriculadas);
+        String disciplinas = String.join(";", disciplinasMatriculadas);
         return nome + "|" + matricula + "|" + curso + "|" + disciplinas;
     }
 
-    // Parse de linha para objeto Aluno
     public static Aluno fromString(String linha) {
         String[] partes = linha.split("\\|");
-        if (partes.length < 3) return null;
+        if (partes.length < 3 || partes.length > 4) {
+            System.err.println("Formato de linha inválido para Aluno: " + linha);
+            return null;
+        }
 
         Aluno aluno = new Aluno(partes[0], partes[1], partes[2]);
 
         if (partes.length == 4 && !partes[3].isEmpty()) {
-            String[] disciplinas = partes[3].split("\\|");
-            aluno.disciplinasMatriculadas.addAll(Arrays.asList(disciplinas));
-        }
-
-        return aluno;
-    }
-
-    // Salvar lista de alunos em arquivo
-    public static void salvarAlunos(List<Aluno> alunos, String caminhoArquivo) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo))) {
-            for (Aluno a : alunos) {
-                writer.write(a.toString());
-                writer.newLine();
-            }
-            System.out.println("Alunos salvos com sucesso.");
-        } catch (IOException e) {
-            System.err.println("Erro ao salvar alunos: " + e.getMessage());
-        }
-    }
-
-    // Carregar lista de alunos do arquivo
-    public static List<Aluno> carregarAlunos(String caminhoArquivo) {
-        List<Aluno> alunos = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(caminhoArquivo))) {
-            String linha;
-            while ((linha = reader.readLine()) != null) {
-                Aluno a = Aluno.fromString(linha);
-                if (a != null) {
-                    alunos.add(a);
+            String[] disciplinas = partes[3].split(";");
+            for (String disc : disciplinas) {
+                if (!disc.isEmpty()) {
+                    aluno.disciplinasMatriculadas.add(disc);
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("Arquivo não encontrado. Retornando lista vazia.");
-        } catch (IOException e) {
-            System.err.println("Erro ao carregar alunos: " + e.getMessage());
         }
-
-        return alunos;
+        return aluno;
     }
 }

@@ -6,6 +6,7 @@ import java.util.*;
 public class MenuAvaliacao {
     private static final String PASTA_AVALIACOES = "dados/avaliacoes/";
     private static List<Avaliacao> avaliacoes = new ArrayList<>();
+    File boletim = new File("dados/boletins/boletim_<nome>.txt");
 
     public static void exibirMenu(Scanner scanner) {
         carregarAvaliacoes(); 
@@ -47,14 +48,13 @@ public class MenuAvaliacao {
         System.out.print("Descrição da avaliação: ");
         String descricao = scanner.nextLine();
 
-        System.out.print("Peso da avaliação (ex: 0.4): ");
+        System.out.print("Peso da avaliação (ex: 0,4): ");
         double peso = scanner.nextDouble();
         scanner.nextLine();
 
         Avaliacao nova = new Avaliacao(codigoTurma, descricao, peso);
         avaliacoes.add(nova);
 
-        // Salvar no arquivo
         nova.salvar(nomeArquivo(codigoTurma, descricao));
         System.out.println("Avaliação criada e salva com sucesso.");
     }
@@ -111,7 +111,7 @@ public class MenuAvaliacao {
     private static void carregarAvaliacoes() {
         File pasta = new File(PASTA_AVALIACOES);
         if (!pasta.exists()) {
-            pasta.mkdirs(); // Cria a pasta se não existir
+            pasta.mkdirs(); 
         }
 
         File[] arquivos = pasta.listFiles((dir, name) -> name.endsWith(".txt"));
