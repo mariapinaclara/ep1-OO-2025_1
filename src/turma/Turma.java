@@ -1,5 +1,11 @@
 package turma;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 import aluno.Aluno;
 import aluno.HistoricoAcademicoTurma;
@@ -144,6 +150,37 @@ public class Turma {
             System.err.println("Erro ao converter número ao carregar turma (cargaHoraria ou tipoMedia): " + e.getMessage() + " na linha: " + linha);
             return null;
         }
+    }
+
+     public static void salvarLista(List<Turma> lista, String caminhoArquivo) {
+        File pasta = new File(caminhoArquivo).getParentFile();
+        if (pasta != null && !pasta.exists()) {
+            pasta.mkdirs();
+        }
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(caminhoArquivo))) {
+            for (Turma turma : lista) {
+                pw.println(turma.toString());
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar lista de turmas: " + e.getMessage());
+        }
+    }
+
+    public static List<Turma> carregarLista(String caminhoArquivo) {
+        List<Turma> lista = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                Turma turma = Turma.fromString(linha);
+                if (turma != null) {
+                    lista.add(turma);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao carregar lista de turmas: " + e.getMessage());
+        }
+        return lista;
     }
 }
 

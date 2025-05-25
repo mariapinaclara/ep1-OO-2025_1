@@ -1,6 +1,7 @@
 package aluno;
 
 import java.util.*;
+import persistencia.*;
 
 public class Aluno {
     private String nome;
@@ -91,5 +92,22 @@ public class Aluno {
             }
         }
         return aluno;
+    }
+    public static void salvarAlunos(List<Aluno> alunos) {
+    List<String> linhas = new ArrayList<>();
+    for (Aluno a : alunos) {
+        linhas.add(a.toString());
+    }
+    PersistenciaUtils.salvarLista("alunos.txt", linhas);
+    }
+
+    public static List<Aluno> carregarAlunos() {
+        List<String> linhas = PersistenciaUtils.carregarLista("alunos.txt");
+        List<Aluno> alunos = new ArrayList<>();
+            for (String linha : linhas) {
+                Aluno a = Aluno.fromString(linha);
+                if (a != null) alunos.add(a);
+        }
+    return alunos;
     }
 }

@@ -5,11 +5,11 @@ import java.util.*;
 
 public class MenuAvaliacao {
     private static final String PASTA_AVALIACOES = "dados/avaliacoes/";
+    private static final String ARQUIVO_AVALIACOES = PASTA_AVALIACOES + "avaliacoes.txt";
     private static List<Avaliacao> avaliacoes = new ArrayList<>();
-    File boletim = new File("dados/boletins/boletim_<nome>.txt");
 
     public static void exibirMenu(Scanner scanner) {
-        carregarAvaliacoes(); 
+        carregarAvaliacoes();
 
         int opcao;
         do {
@@ -55,7 +55,7 @@ public class MenuAvaliacao {
         Avaliacao nova = new Avaliacao(codigoTurma, descricao, peso);
         avaliacoes.add(nova);
 
-        nova.salvar(nomeArquivo(codigoTurma, descricao));
+        salvarAvaliacoes();  // Salva lista completa
         System.out.println("Avaliação criada e salva com sucesso.");
     }
 
@@ -91,7 +91,7 @@ public class MenuAvaliacao {
         scanner.nextLine();
 
         av.lancarNota(matricula, nota);
-        av.salvar(nomeArquivo(codigoTurma, descricao));
+        salvarAvaliacoes();  // Salva lista completa
         System.out.println("Nota lançada com sucesso.");
     }
 
@@ -104,24 +104,26 @@ public class MenuAvaliacao {
         return null;
     }
 
-    private static String nomeArquivo(String codigoTurma, String descricao) {
-        return PASTA_AVALIACOES + codigoTurma + "_" + descricao.replaceAll("\\s+", "_") + ".txt";
-    }
-
     private static void carregarAvaliacoes() {
         File pasta = new File(PASTA_AVALIACOES);
         if (!pasta.exists()) {
-            pasta.mkdirs(); 
+            pasta.mkdirs();
         }
 
-        File[] arquivos = pasta.listFiles((dir, name) -> name.endsWith(".txt"));
-        if (arquivos != null) {
-            for (File arq : arquivos) {
-                Avaliacao av = Avaliacao.carregar(arq.getPath());
-                if (av != null) {
-                    avaliacoes.add(av);
-                }
-            }
+        File arquivo = new File(ARQUIVO_AVALIACOES);
+        if (arquivo.exists()) {
+            avaliacoes = Avaliacao.carregarLista(ARQUIVO_AVALIACOES);
+        } else {
+            avaliacoes = new ArrayList<>();
         }
     }
+
+    private static void salvarAvaliacoes() {
+        File pasta = new File(PASTA_AVALIACOES);
+        if (!pasta.exists()) {
+            pasta.mkdirs();
+        }
+        Avaliacao.salvarLista(avaliacoes, ARQUIVO_AVALIACOES);
+    }
 }
+

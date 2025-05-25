@@ -52,21 +52,47 @@ public class Avaliacao {
         }
     }
 
-    // Carregar avaliação do arquivo
-    public static Avaliacao carregar(String caminhoArquivo) {
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
-            String linha = br.readLine();
-            if (linha == null) return null;
-            String[] dados = linha.split(";");
-            Avaliacao av = new Avaliacao(dados[0], dados[1], Double.parseDouble(dados[2]));
+   // Método para salvar uma lista de Avaliacao num arquivo
+    public static void salvarLista(List<Avaliacao> lista, String caminhoArquivo) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(caminhoArquivo))) {
+            for (Avaliacao av : lista) {
+                pw.println(av.getCodigoTurma() + "|" + av.getDescricao() + "|" + av.getPeso());
+                    for (Map.Entry<String, Double> nota : av.getNotas().entrySet()) {
+                        pw.println(nota.getKey() + "|" + nota.getValue());
+                    }
+                pw.println("---"); // separador entre avaliações
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar avaliações: " + e.getMessage());
+        }
+    }
+
+
+    public static List<Avaliacao> carregarLista(String caminhoArquivo) {
+        List<Avaliacao> avaliacoes = new ArrayList<>();
+            try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+                String linha;
+                Avaliacao av = null;
             while ((linha = br.readLine()) != null) {
-                String[] notaData = linha.split(";");
+                if (linha.equals("---")) {
+                    if (av != null) {
+                        avaliacoes.add(av);
+                            av = null;
+                }
+            } else if (av == null) {
+                String[] dados = linha.split("\\|");
+                av = new Avaliacao(dados[0], dados[1], Double.parseDouble(dados[2]));
+            } else {
+                String[] notaData = linha.split("\\|");
                 av.lancarNota(notaData[0], Double.parseDouble(notaData[1]));
             }
-            return av;
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar avaliação: " + e.getMessage());
-            return null;
         }
+        if (av != null) {
+            avaliacoes.add(av);
+        }
+    } catch (IOException e) {
+        System.out.println("Erro ao carregar avaliações: " + e.getMessage());
+    }
+    return avaliacoes;
     }
 }

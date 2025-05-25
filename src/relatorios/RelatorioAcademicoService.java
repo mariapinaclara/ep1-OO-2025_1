@@ -1,4 +1,3 @@
-// Conteúdo anterior de RelatorioAcademicoService.java (não mude nada aqui)
 package relatorios;
 
 import java.util.List;
@@ -16,10 +15,7 @@ public class RelatorioAcademicoService {
     private List<Turma> turmas;
     private List<HistoricoAcademicoTurma> historicosAcademicos;
 
-    public RelatorioAcademicoService(List<Aluno> alunos, List<Turma> turmas,
-                                     List<Disciplina> disciplinas, List<Professor> professores,
-                                     List<HistoricoAcademicoTurma> historicosAcademicos,
-                                     CalculoAcademicoService calculoAcademicoService) {
+    public RelatorioAcademicoService(List<Aluno> alunos, List<Turma> turmas, List<Disciplina> disciplinas, List<Professor> professores, List<HistoricoAcademicoTurma> historicosAcademicos, CalculoAcademicoService calculoAcademicoService) {
         this.alunos = alunos;
         this.turmas = turmas;
         this.disciplinas = disciplinas;
@@ -56,10 +52,7 @@ public class RelatorioAcademicoService {
         for (Aluno aluno : turma.getAlunosMatriculados()) {
             System.out.println("\n    - Aluno: " + aluno.getNome() + " (Matrícula: " + aluno.getMatricula() + ")");
 
-            HistoricoAcademicoTurma historico = historicosAcademicos.stream()
-                .filter(h -> h.getMatriculaAluno().equals(aluno.getMatricula()) && h.getCodigoTurma().equals(turma.getCodigo()))
-                .findFirst()
-                .orElse(null);
+            HistoricoAcademicoTurma historico = historicosAcademicos.stream().filter(h -> h.getMatriculaAluno().equals(aluno.getMatricula()) && h.getCodigoTurma().equals(turma.getCodigo())).findFirst().orElse(null);
 
             if (historico != null) {
                 System.out.println("      Notas:");
@@ -93,9 +86,7 @@ public class RelatorioAcademicoService {
         System.out.println("\n== BOLETIM ESCOLAR DO ALUNO: " + aluno.getNome() + " (" + aluno.getMatricula() + ") ===");
 
         // Filtrar históricos da lista GLOBAL 'historicosAcademicos' para o aluno encontrado
-        List<HistoricoAcademicoTurma> historicosDoAluno = historicosAcademicos.stream()
-            .filter(h -> h.getMatriculaAluno().equals(matriculaAluno) && (codigoTurma == null || codigoTurma.isEmpty() || h.getCodigoTurma().equals(codigoTurma)))
-            .collect(java.util.stream.Collectors.toList());
+        List<HistoricoAcademicoTurma> historicosDoAluno = historicosAcademicos.stream().filter(h -> h.getMatriculaAluno().equals(matriculaAluno) && (codigoTurma == null || codigoTurma.isEmpty() || h.getCodigoTurma().equals(codigoTurma))).collect(java.util.stream.Collectors.toList());
 
 
         if (historicosDoAluno.isEmpty()) {

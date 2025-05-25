@@ -87,7 +87,7 @@ public class MenuAluno {
             return;
         }
 
-        System.out.println("\n--- Lista de alunos ---");
+        System.out.println("\n===  Lista de alunos ===");
         for (Aluno aluno : alunos) {
             String tipo = (aluno instanceof AlunoEspecial) ? "Especial" : "Normal";
             System.out.println("Tipo: " + tipo + " | Nome: " + aluno.getNome() + " | Matrícula: " + aluno.getMatricula() + " | Curso: " + aluno.getCurso());
@@ -113,9 +113,7 @@ public class MenuAluno {
 
         System.out.println("\n=== Histórico de " + alunoEncontrado.getNome() + " ===");
 
-        List<HistoricoAcademicoTurma> historicosDoAluno = historicosAcademicos.stream()
-            .filter(h -> h.getMatriculaAluno().equalsIgnoreCase(matricula))
-            .collect(java.util.stream.Collectors.toList());
+        List<HistoricoAcademicoTurma> historicosDoAluno = historicosAcademicos.stream().filter(h -> h.getMatriculaAluno().equalsIgnoreCase(matricula)).collect(java.util.stream.Collectors.toList());
 
         if (historicosDoAluno.isEmpty()) {
             System.out.println("Nenhum histórico acadêmico encontrado para este aluno.");
@@ -125,10 +123,7 @@ public class MenuAluno {
         for (HistoricoAcademicoTurma hist : historicosDoAluno) {
             System.out.println("\n- Turma: " + hist.getCodigoTurma());
             
-            Turma turmaRelacionada = turmas.stream()
-                .filter(t -> t.getCodigo().equals(hist.getCodigoTurma()))
-                .findFirst()
-                .orElse(null);
+            Turma turmaRelacionada = turmas.stream().filter(t -> t.getCodigo().equals(hist.getCodigoTurma())).findFirst().orElse(null);
 
             if (turmaRelacionada != null) {
                 System.out.println("  Disciplina: " + turmaRelacionada.getMateria());
@@ -146,12 +141,7 @@ public class MenuAluno {
             System.out.println("  Faltas: " + hist.getFaltas());
         }
 
-        // Adiciona um uso mais explícito da classe HistoricoAcademicoTurma.
-        // Isso deve satisfazer o compilador que a importação está sendo usada.
-        // É um uso inofensivo que não afeta a lógica.
         @SuppressWarnings("unused")
         HistoricoAcademicoTurma verificaUso = HistoricoAcademicoTurma.fromString("temp|temp|0|0|");
-        // Você também poderia ter um método privado auxiliar que faz algo com HistoricoAcademicoTurma
-        // e o chama aqui, mas isso é o mais simples e direto.
     }
 }

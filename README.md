@@ -67,10 +67,11 @@ O enunciado do trabalho pode ser encontrado aqui:
 
 ## Observações (Extras ou Dificuldades)
 
-- [Espaço para o aluno comentar qualquer funcionalidade extra que implementou, dificuldades enfrentadas, ou considerações importantes.]
+- Tive dificuldade para implementar nos códigos o método de persistência: para salvar os dados inseridos mesmo após encerrar o programa.
+- A questão dos relatórios também foi um pouco  dificil para mim, pois estava meio confusa com o que deveria ser implementado e o que deveria aparecer na saída.
 
 ---
 
 ## Contato
 
-- [Opcional: E-mail pessoal do aluno.]
+- maria.pinaclara@gmail.com

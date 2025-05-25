@@ -1,6 +1,13 @@
 package aluno;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors; // Necessário para o toString()
 
@@ -19,7 +26,6 @@ public class HistoricoAcademicoTurma {
         this.cargaHorariaTurma = cargaHorariaTurma;
     }
 
-    // --- Getters ---
     public String getMatriculaAluno() {
         return matriculaAluno;
     }
@@ -40,16 +46,14 @@ public class HistoricoAcademicoTurma {
         return cargaHorariaTurma;
     }
 
-    // --- Setters (Adicionados para facilitar o fromString) ---
     public void setFaltas(int faltas) {
         this.faltas = faltas;
     }
 
     public void setNotas(Map<String, Double> notas) {
-        this.notas = new HashMap<>(notas); // Para copiar as notas e evitar referência direta
+        this.notas = new HashMap<>(notas); 
     }
 
-    // --- Métodos Adicionais ---
     public void adicionarNota(String tipoNota, double valor) {
         this.notas.put(tipoNota, valor);
     }
@@ -58,22 +62,13 @@ public class HistoricoAcademicoTurma {
         this.faltas++;
     }
 
-    // --- Métodos para Persistência (CRUCIAIS) ---
-
     @Override
     public String toString() {
-        // Formato: matriculaAluno|codigoTurma|faltas|cargaHorariaTurma|tipoNota1:valor1,tipoNota2:valor2,...
         StringBuilder sb = new StringBuilder();
-        sb.append(matriculaAluno).append("|")
-          .append(codigoTurma).append("|")
-          .append(faltas).append("|")
-          .append(cargaHorariaTurma).append("|");
+        sb.append(matriculaAluno).append("|").append(codigoTurma).append("|").append(faltas).append("|").append(cargaHorariaTurma).append("|");
 
-        // Adiciona as notas
         if (!notas.isEmpty()) {
-            String notasString = notas.entrySet().stream()
-                                     .map(entry -> entry.getKey() + ":" + entry.getValue())
-                                     .collect(Collectors.joining(","));
+            String notasString = notas.entrySet().stream().map(entry -> entry.getKey() + ":" + entry.getValue()).collect(Collectors.joining(","));
             sb.append(notasString);
         }
         return sb.toString();
@@ -82,7 +77,7 @@ public class HistoricoAcademicoTurma {
     public static HistoricoAcademicoTurma fromString(String linha) {
         String[] partes = linha.split("\\|");
 
-        // Esperamos 4 partes fixas + 1 parte opcional para as notas
+        
         if (partes.length < 4 || partes.length > 5) {
             System.err.println("Formato de linha inválido para HistoricoAcademicoTurma. Esperado 4 ou 5 partes, encontrado " + partes.length + ": " + linha);
             return null;
@@ -95,9 +90,8 @@ public class HistoricoAcademicoTurma {
             int cargaHorariaTurma = Integer.parseInt(partes[3]);
 
             HistoricoAcademicoTurma historico = new HistoricoAcademicoTurma(matriculaAluno, codigoTurma, cargaHorariaTurma);
-            historico.setFaltas(faltas); // Define as faltas
+            historico.setFaltas(faltas); 
 
-            // Carrega as notas, se existirem
             if (partes.length == 5 && !partes[4].isEmpty()) {
                 String[] notasArray = partes[4].split(",");
                 for (String notaPar : notasArray) {
@@ -112,5 +106,31 @@ public class HistoricoAcademicoTurma {
             System.err.println("Erro ao converter número ao carregar histórico acadêmico: " + e.getMessage() + " na linha: " + linha);
             return null;
         }
+    }
+
+ public static void salvar(List<HistoricoAcademicoTurma> lista) {
+    try (PrintWriter pw = new PrintWriter(new FileWriter("HistoricoAcademicoTurma.txt"))) {
+        for (HistoricoAcademicoTurma h : lista) {
+            pw.println(h.toString());
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+public static List<HistoricoAcademicoTurma> carregar() {
+    List<HistoricoAcademicoTurma> lista = new ArrayList<>();
+    try (BufferedReader br = new BufferedReader(new FileReader("HistoricoAcademicoTurma.txt"))) {
+        String linha;
+        while ((linha = br.readLine()) != null) {
+            HistoricoAcademicoTurma h = HistoricoAcademicoTurma.fromString(linha);
+            if (h != null) {
+                lista.add(h);
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return lista;
     }
 }

@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+
 import aluno.Aluno;
-import aluno.AlunoEspecial; 
+import aluno.AlunoEspecial;
 import aluno.HistoricoAcademicoTurma;
 import aluno.MenuAluno;
 import disciplina.Disciplina;
@@ -16,7 +17,6 @@ import professor.MenuProfessor;
 import turma.Turma;
 import turma.MenuTurma;
 import frequencia.MenuFrequencia;
-
 import relatorios.CalculoAcademicoService;
 import relatorios.MenuRelatorio;
 import relatorios.RelatorioAcademicoService;
@@ -26,31 +26,29 @@ public class SistemaAcademico {
     private static List<Professor> professores = new ArrayList<>();
     private static List<Disciplina> disciplinas = new ArrayList<>();
     private static List<Turma> turmas = new ArrayList<>();
-    private static List<HistoricoAcademicoTurma> historicosAcademicos = new ArrayList<>(); 
+    private static List<HistoricoAcademicoTurma> historicosAcademicos = new ArrayList<>();
 
     private static final String PASTA_DADOS = "dados/";
     private static final String ARQUIVO_ALUNOS = PASTA_DADOS + "alunos.txt";
     private static final String ARQUIVO_PROFESSORES = PASTA_DADOS + "professores.txt";
     private static final String ARQUIVO_DISCIPLINAS = PASTA_DADOS + "disciplinas.txt";
     private static final String ARQUIVO_TURMAS = PASTA_DADOS + "turmas.txt";
-    private static final String ARQUIVO_HISTORICOS = PASTA_DADOS + "historicos.txt"; 
+    private static final String ARQUIVO_HISTORICOS = PASTA_DADOS + "historicos.txt";
 
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        carregarTodosOsDados(); 
+        carregarTodosOsDados();
+
         CalculoAcademicoService calculoAcademicoService = new CalculoAcademicoService();
 
         RelatorioAcademicoService relatorioAcademicoService = new RelatorioAcademicoService(alunos, turmas, disciplinas, professores, historicosAcademicos, calculoAcademicoService);
 
         MenuAluno menuAluno = new MenuAluno(scanner, alunos, turmas, historicosAcademicos);
-
         MenuDisciplina menuDisciplina = new MenuDisciplina(scanner, disciplinas);
         MenuProfessor menuProfessor = new MenuProfessor(scanner, professores);
         MenuTurma menuTurma = new MenuTurma(scanner, turmas, alunos, disciplinas, professores);
-
         MenuFrequencia menuFrequencia = new MenuFrequencia(scanner, alunos, turmas, historicosAcademicos);
-
         MenuRelatorio menuRelatorio = new MenuRelatorio(scanner, alunos, turmas, disciplinas, professores, historicosAcademicos, calculoAcademicoService);
 
         int opcao;
@@ -64,8 +62,14 @@ public class SistemaAcademico {
             System.out.println("6. Gerar Relatórios e Boletins");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
+
+            while (!scanner.hasNextInt()) {
+                System.out.println("Por favor, digite um número válido.");
+                scanner.next(); 
+                System.out.print("Escolha uma opção: ");
+            }
             opcao = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1:
@@ -87,7 +91,7 @@ public class SistemaAcademico {
                     menuRelatorio.exibirMenu();
                     break;
                 case 0:
-                    salvarTodosOsDados(); 
+                    salvarTodosOsDados();
                     System.out.println("Saindo do sistema. Dados salvos.");
                     break;
                 default:
@@ -101,7 +105,10 @@ public class SistemaAcademico {
     private static void criarPastaDados() {
         File pasta = new File(PASTA_DADOS);
         if (!pasta.exists()) {
-            pasta.mkdirs();
+            boolean criada = pasta.mkdirs();
+            if (!criada) {
+                System.err.println("Falha ao criar pasta de dados!");
+            }
         }
     }
 
@@ -115,16 +122,16 @@ public class SistemaAcademico {
             String linha;
             while ((linha = br.readLine()) != null) {
                 Aluno aluno = null;
-                if (linha.contains("Especial")) { 
+                if (linha.contains("Especial")) {
                     try {
-                        aluno = AlunoEspecial.fromString(linha); 
+                        aluno = AlunoEspecial.fromString(linha);
                     } catch (Exception e) {
                         aluno = Aluno.fromString(linha);
                     }
                 } else {
                     aluno = Aluno.fromString(linha);
                 }
-                
+
                 if (aluno != null) {
                     alunos.add(aluno);
                 }
@@ -265,29 +272,22 @@ public class SistemaAcademico {
             String linha;
             while ((linha = br.readLine()) != null) {
                 HistoricoAcademicoTurma historico = HistoricoAcademicoTurma.fromString(linha);
+
                 if (historico != null) {
                     historicosAcademicos.add(historico);
-                }
-            }
-            System.out.println("Históricos Acadêmicos carregados: " + historicosAcademicos.size());
 
-            for (HistoricoAcademicoTurma hist : historicosAcademicos) {
-                Aluno aluno = alunos.stream()
-                                  .filter(a -> a.getMatricula().equals(hist.getMatriculaAluno()))
-                                  .findFirst()
-                                  .orElse(null);
-                if (aluno != null) {
-                    if (aluno.getHistoricosAcademicos() == null) {
-                      
+                    Aluno aluno = buscarAlunoPorMatricula(historico.getMatriculaAluno());
+                    Turma turma = buscarTurmaPorCodigo(historico.getCodigoTurma());
+
+                    if (aluno != null && turma != null) {
+                        if (aluno.getHistoricosAcademicos() == null) {
+                            aluno.setHistoricosAcademicos(new ArrayList<>());
+                        }
+                        aluno.adicionarHistoricoTurma(historico);
                     }
-                    aluno.adicionarHistoricoTurma(hist.getCodigoTurma(), hist);
                 }
             }
-
-            for (Turma turma : turmas) {
-                List<Aluno> alunosDaTurma = historicosAcademicos.stream().filter(h -> h.getCodigoTurma().equals(turma.getCodigo())).map(h -> alunos.stream().filter(a -> a.getMatricula().equals(h.getMatriculaAluno())).findFirst().orElse(null)).filter(java.util.Objects::nonNull).collect(Collectors.toList());
-                turma.setAlunosMatriculados(alunosDaTurma);
-            }
+            System.out.println("Históricos acadêmicos carregados: " + historicosAcademicos.size());
         } catch (IOException e) {
             System.err.println("Erro ao carregar históricos acadêmicos: " + e.getMessage());
         } catch (Exception e) {
@@ -302,23 +302,39 @@ public class SistemaAcademico {
             for (HistoricoAcademicoTurma historico : historicosAcademicos) {
                 pw.println(historico.toString());
             }
-            System.out.println("Históricos Acadêmicos salvos: " + historicosAcademicos.size());
+            System.out.println("Históricos acadêmicos salvos: " + historicosAcademicos.size());
         } catch (IOException e) {
             System.err.println("Erro ao salvar históricos acadêmicos: " + e.getMessage());
         }
     }
 
+    private static Aluno buscarAlunoPorMatricula(String matricula) {
+        for (Aluno aluno : alunos) {
+            if (aluno.getMatricula().equals(matricula)) {
+                return aluno;
+            }
+        }
+        return null;
+    }
+
+    private static Turma buscarTurmaPorCodigo(String codigo) {
+        for (Turma turma : turmas) {
+            if (turma.getCodigo().equals(codigo)) {
+                return turma;
+            }
+        }
+        return null;
+    }
+
     private static void carregarTodosOsDados() {
-        criarPastaDados();
         carregarAlunos();
         carregarProfessores();
         carregarDisciplinas();
         carregarTurmas();
-        carregarHistoricosAcademicos(); 
+        carregarHistoricosAcademicos();
     }
 
     private static void salvarTodosOsDados() {
-        System.out.println("Salvando todos os dados...");
         salvarAlunos();
         salvarProfessores();
         salvarDisciplinas();
