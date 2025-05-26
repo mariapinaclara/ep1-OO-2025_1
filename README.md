@@ -20,10 +20,11 @@ O enunciado do trabalho pode ser encontrado aqui:
 
 1. **Compilação:**  
 - 'cd src/main/java/
+
 javac com/seuprojeto/**/*.java'
 
 2. **Execução:**  
-   java -cp src/main/java/ com.sistemaacademico.SistemaAcademico
+- 'java -cp src/main/java/ com.sistemaacademico.SistemaAcademico'
 
 3. **Estrutura de Pastas:**  
 
