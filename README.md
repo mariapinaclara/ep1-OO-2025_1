@@ -19,16 +19,57 @@ O enunciado do trabalho pode ser encontrado aqui:
 ## Instruções para Compilação e Execução
 
 1. **Compilação:**  
-   [Descrever aqui como compilar o projeto. Exemplo: `javac Main.java` ou o script usado]
+- 'cd src/main/java/
+javac com/seuprojeto/**/*.java'
 
 2. **Execução:**  
-   [Descrever aqui como executar o projeto. Exemplo: `java Main` ou o script usado]
+   java -cp src/main/java/ com.sistemaacademico.SistemaAcademico
 
 3. **Estrutura de Pastas:**  
-   [Descrever aqui as principais pastas do projeto]
 
-3. **Versão do JAVA utilizada:**  
-   [Descrever aqui como versão do JAVA utilizada no projeto. Sugestão: `java 21`]
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │       └── sistemaacademico/
+│   │   │           ├── aluno/
+│   │   │           │   ├── Aluno.java
+│   │   │           │   ├── AlunoEspecial.java
+│   │   │           │   ├── HistoricoAcademicoTurma.java
+│   │   │           │   └── MenuAluno.java
+│   │   │           ├── avaliacao/
+│   │   │           │   ├── Avaliacao.java
+│   │   │           │   └── MenuAvaliacao.java
+│   │   │           ├── disciplina/
+│   │   │           │   ├── Disciplina.java
+│   │   │           │   └── MenuDisciplina.java
+│   │   │           ├── frequencia/
+│   │   │           │   ├── Frequencia.java
+│   │   │           │   └── MenuFrequencia.java
+│   │   │           ├── professor/
+│   │   │           │   ├── Professor.java
+│   │   │           │   └── MenuProfessor.java
+│   │   │           ├── relatorios/
+│   │   │           │   ├── CalculoAcademicoService.java
+│   │   │           │   ├── MenuRelatorio.java
+│   │   │           │   └── RelatorioAcademicoService.java
+│   │   │           ├── turma/
+│   │   │           │   ├── Turma.java
+│   │   │           │   └── MenuTurma.java
+│   │   │           ├── util/  
+│   │   │           │   └── PersistenciaUtils.java
+│   │   │           └── SistemaAcademico.java  
+│   │   └── resources/
+│   │       └── dados/
+│   │           ├── alunos.txt
+│   │           ├── disciplinas.txt
+│   │           ├── historicos.txt
+│   │           ├── professores.txt
+│   │           └── turmas.txt
+├── .gitignore
+└── README.md
+
+4. **Versão do JAVA utilizada:**  
+   O desenvolvimento e os testes deste projeto foram realizados utilizando a Java Development Kit (JDK) versão 21.
 
 ---
 
@@ -53,22 +94,25 @@ O enunciado do trabalho pode ser encontrado aqui:
 
 ## Principais Funcionalidades Implementadas
 
-- [ ] Cadastro, listagem, matrícula e trancamento de alunos (Normais e Especiais)
+- [OK] Cadastro, listagem, matrícula e trancamento de alunos (Normais e Especiais)
 - [OK] Cadastro de disciplinas e criação de turmas (presenciais e remotas)
-- [ ] Matrícula de alunos em turmas, respeitando vagas e pré-requisitos
+- [OK] Matrícula de alunos em turmas, respeitando vagas e pré-requisitos
 - [OK] Lançamento de notas e controle de presença
-- [ ] Cálculo de média final e verificação de aprovação/reprovação
-- [ ] Relatórios de desempenho acadêmico por aluno, turma e disciplina
+- [OK] Cálculo de média final e verificação de aprovação/reprovação
+- [OK] Relatórios de desempenho acadêmico por aluno, turma e disciplina
 - [OK] Persistência de dados em arquivos (.txt ou .csv)
-- [ ] Tratamento de duplicidade de matrículas
-- [ ] Uso de herança, polimorfismo e encapsulamento
+- [OK] Tratamento de duplicidade de matrículas
+- [OK] Uso de herança, polimorfismo e encapsulamento
 
 ---
 
 ## Observações (Extras ou Dificuldades)
 
 - Tive dificuldade para implementar nos códigos o método de persistência: para salvar os dados inseridos mesmo após encerrar o programa.
+
 - A questão dos relatórios também foi um pouco  dificil para mim, pois estava meio confusa com o que deveria ser implementado e o que deveria aparecer na saída.
+
+- Um desafio significativo foi a persistência e correta leitura do tipoMedia dos históricos acadêmicos, o que inicialmente impedia o cálculo da média final. A resolução envolveu um processo rigoroso de depuração e a garantia da recriação dos arquivos de dados para que as informações fossem salvas e carregadas no formato correto, permitindo que a lógica de cálculo funcionasse.
 
 ---
 
