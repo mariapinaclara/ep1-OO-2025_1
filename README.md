@@ -128,9 +128,12 @@ javac com/seuprojeto/**/*.java'
 
 
 2. Cadastro de Aluno:  
-   ![Inserir Print 2](caminho/do/print2.png)
+   ![Menu de Alunos](https://github.com/user-attachments/assets/127282ca-e051-4561-9283-95f40e8b9058)
+   ![Menu Alunos Cadastro](https://github.com/user-attachments/assets/593cfbe9-ef2a-41a3-be00-c77f8ffa7875)
 
-3. Relatório de Frequência/Notas:  
+
+
+4. Relatório de Frequência/Notas:  
    ![Inserir Print 3](caminho/do/print3.png)
 
 ---
