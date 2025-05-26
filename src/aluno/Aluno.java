@@ -1,7 +1,8 @@
 package aluno;
 
 import java.util.*;
-import persistencia.*;
+import persistencia.*; // Certifique-se de que HistoricoAcademicoTurma está neste pacote ou importe o pacote correto.
+// import aluno.HistoricoAcademicoTurma; // Se HistoricoAcademicoTurma estiver no pacote 'aluno'
 
 public class Aluno {
     private String nome;
@@ -56,6 +57,7 @@ public class Aluno {
         }
     }
 
+    // Este método já estava correto. O problema era na chamada.
     public void adicionarHistoricoTurma(String idTurma, HistoricoAcademicoTurma historico) {
         this.historicosPorTurma.put(idTurma, historico);
     }
@@ -64,8 +66,14 @@ public class Aluno {
         return historicosPorTurma.get(idTurma);
     }
 
-    public Map<String, HistoricoAcademicoTurma> getHistoricosAcademicos() { 
+    // O getter para os históricos acadêmicos (o mapa completo)
+    public Map<String, HistoricoAcademicoTurma> getHistoricosAcademicos() {
         return historicosPorTurma;
+    }
+
+    // NOVO MÉTODO (ADICIONADO): Setter para o mapa de históricos, caso precise definir o mapa todo de uma vez
+    public void setHistoricosAcademicos(Map<String, HistoricoAcademicoTurma> historicos) {
+        this.historicosPorTurma = historicos;
     }
 
     @Override
@@ -93,21 +101,22 @@ public class Aluno {
         }
         return aluno;
     }
+
     public static void salvarAlunos(List<Aluno> alunos) {
-    List<String> linhas = new ArrayList<>();
-    for (Aluno a : alunos) {
-        linhas.add(a.toString());
-    }
-    PersistenciaUtils.salvarLista("alunos.txt", linhas);
+        List<String> linhas = new ArrayList<>();
+        for (Aluno a : alunos) {
+            linhas.add(a.toString());
+        }
+        PersistenciaUtils.salvarLista("alunos.txt", linhas);
     }
 
     public static List<Aluno> carregarAlunos() {
         List<String> linhas = PersistenciaUtils.carregarLista("alunos.txt");
         List<Aluno> alunos = new ArrayList<>();
-            for (String linha : linhas) {
-                Aluno a = Aluno.fromString(linha);
-                if (a != null) alunos.add(a);
+        for (String linha : linhas) {
+            Aluno a = Aluno.fromString(linha);
+            if (a != null) alunos.add(a);
         }
-    return alunos;
+        return alunos;
     }
 }

@@ -3,6 +3,7 @@ package main;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map; 
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class SistemaAcademico {
     private static List<Professor> professores = new ArrayList<>();
     private static List<Disciplina> disciplinas = new ArrayList<>();
     private static List<Turma> turmas = new ArrayList<>();
-    private static List<HistoricoAcademicoTurma> historicosAcademicos = new ArrayList<>();
+    private static List<HistoricoAcademicoTurma> historicosAcademicos = new ArrayList<>(); 
 
     private static final String PASTA_DADOS = "dados/";
     private static final String ARQUIVO_ALUNOS = PASTA_DADOS + "alunos.txt";
@@ -65,7 +66,7 @@ public class SistemaAcademico {
 
             while (!scanner.hasNextInt()) {
                 System.out.println("Por favor, digite um número válido.");
-                scanner.next(); 
+                scanner.next();
                 System.out.print("Escolha uma opção: ");
             }
             opcao = scanner.nextInt();
@@ -126,6 +127,7 @@ public class SistemaAcademico {
                     try {
                         aluno = AlunoEspecial.fromString(linha);
                     } catch (Exception e) {
+                        System.err.println("Erro ao carregar AlunoEspecial, tentando como Aluno normal: " + linha + " - " + e.getMessage());
                         aluno = Aluno.fromString(linha);
                     }
                 } else {
@@ -271,19 +273,18 @@ public class SistemaAcademico {
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
+                // Aqui você está lendo HistoricoAcademicoTurma
                 HistoricoAcademicoTurma historico = HistoricoAcademicoTurma.fromString(linha);
 
                 if (historico != null) {
                     historicosAcademicos.add(historico);
 
                     Aluno aluno = buscarAlunoPorMatricula(historico.getMatriculaAluno());
-                    Turma turma = buscarTurmaPorCodigo(historico.getCodigoTurma());
 
-                    if (aluno != null && turma != null) {
-                        if (aluno.getHistoricosAcademicos() == null) {
-                            aluno.setHistoricosAcademicos(new ArrayList<>());
-                        }
-                        aluno.adicionarHistoricoTurma(historico);
+                    if (aluno != null) {
+                        aluno.adicionarHistoricoTurma(historico.getCodigoTurma(), historico); 
+                    } else {
+                        System.err.println("Aluno com matrícula " + historico.getMatriculaAluno() + " não encontrado para associar histórico de turma: " + historico.getCodigoTurma());
                     }
                 }
             }
@@ -327,6 +328,7 @@ public class SistemaAcademico {
     }
 
     private static void carregarTodosOsDados() {
+        criarPastaDados(); 
         carregarAlunos();
         carregarProfessores();
         carregarDisciplinas();
