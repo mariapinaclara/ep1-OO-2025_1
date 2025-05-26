@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Scanner; 
 
 import aluno.Aluno;
-import aluno.AlunoEspecial; // Para AlunoEspecial, se você o tiver
+import aluno.AlunoEspecial; 
 import aluno.HistoricoAcademicoTurma;
 import aluno.MenuAluno;
 import disciplina.Disciplina;
 import disciplina.MenuDisciplina;
 import professor.Professor;
 import professor.MenuProfessor;
-import turma.Turma; // Certifique-se que o pacote está correto
+import turma.Turma;
 import turma.MenuTurma;
 import frequencia.MenuFrequencia;
 import relatorios.CalculoAcademicoService;
@@ -43,7 +43,7 @@ public class SistemaAcademico {
         MenuAluno menuAluno = new MenuAluno(scanner, alunos, turmas, historicosAcademicos);
         MenuDisciplina menuDisciplina = new MenuDisciplina(scanner, disciplinas);
         MenuProfessor menuProfessor = new MenuProfessor(scanner, professores);
-        MenuTurma menuTurma = new MenuTurma(scanner, turmas, alunos, disciplinas, professores);
+        MenuTurma menuTurma = new MenuTurma(scanner, turmas, alunos, disciplinas, professores, historicosAcademicos);
         MenuFrequencia menuFrequencia = new MenuFrequencia(scanner, alunos, turmas, historicosAcademicos);
         MenuRelatorio menuRelatorio = new MenuRelatorio(scanner, alunos, turmas, disciplinas, professores, historicosAcademicos, calculoAcademicoService);
 
@@ -88,7 +88,7 @@ public class SistemaAcademico {
                     break;
                 case 0:
                     salvarTodosOsDados();
-                    System.out.println("Saindo do sistema. Dados salvos.");
+                    System.out.println("Encerrando sistema.");
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
@@ -109,36 +109,33 @@ public class SistemaAcademico {
     }
 
     private static void carregarAlunos() {
-        File arquivo = new File(ARQUIVO_ALUNOS);
-        if (!arquivo.exists()) {
-            System.out.println("Arquivo de alunos não encontrado. Criando um novo.");
-            return;
-        }
-        alunos.clear(); // Limpa a lista antes de carregar para evitar duplicatas ao recarregar
-        try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                Aluno aluno = null;
-                if (linha.contains("Especial")) {
-                    try {
-                        aluno = AlunoEspecial.fromString(linha);
-                    } catch (Exception e) {
-                        System.err.println("Erro ao carregar AlunoEspecial, tentando como Aluno normal: " + linha + " - " + e.getMessage());
-                        aluno = Aluno.fromString(linha);
-                    }
-                } else {
-                    aluno = Aluno.fromString(linha);
-                }
-
+    File arquivo = new File(ARQUIVO_ALUNOS);
+    if (!arquivo.exists()) {
+        System.out.println("Arquivo de alunos não encontrado.");
+        return;
+    }
+    alunos.clear(); 
+    try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
+        String linha;
+        while ((linha = br.readLine()) != null) {
+            Aluno aluno = null;
+            if (linha.startsWith("AlunoEspecial|")) {
+                aluno = AlunoEspecial.fromString(linha);
+            } else if (linha.startsWith("Aluno|")) { 
+                aluno = Aluno.fromString(linha);
+            }
+            
                 if (aluno != null) {
                     alunos.add(aluno);
+                } else {
+                    System.err.println("Linha de aluno com formato inválido ou desconhecido: " + linha);
                 }
             }
             System.out.println("Alunos carregados: " + alunos.size());
         } catch (IOException e) {
             System.err.println("Erro ao carregar alunos: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("Erro inesperado ao carregar alunos (verifique o fromString de Aluno): " + e.getMessage());
+            System.err.println("Erro inesperado ao carregar alunos: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -146,22 +143,26 @@ public class SistemaAcademico {
     private static void salvarAlunos() {
         criarPastaDados();
         try (PrintWriter pw = new PrintWriter(new FileWriter(ARQUIVO_ALUNOS))) {
-            for (Aluno aluno : alunos) {
-                pw.println(aluno.toString());
-            }
-            System.out.println("Alunos salvos: " + alunos.size());
-        } catch (IOException e) {
-            System.err.println("Erro ao salvar alunos: " + e.getMessage());
+        for (Aluno aluno : alunos) {
+            pw.println(aluno.toString());
         }
+
+        pw.flush(); 
+
+        System.out.println("Alunos salvos: " + alunos.size());
+    } catch (IOException e) {
+        System.err.println("Erro ao salvar alunos: " + e.getMessage());
+        e.printStackTrace(); 
+    }
     }
 
     private static void carregarProfessores() {
         File arquivo = new File(ARQUIVO_PROFESSORES);
         if (!arquivo.exists()) {
-            System.out.println("Arquivo de professores não encontrado. Criando um novo.");
+            System.out.println("Arquivo de professores não encontrado.");
             return;
         }
-        professores.clear(); // Limpa a lista antes de carregar
+        professores.clear(); 
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
@@ -194,10 +195,10 @@ public class SistemaAcademico {
     private static void carregarDisciplinas() {
         File arquivo = new File(ARQUIVO_DISCIPLINAS);
         if (!arquivo.exists()) {
-            System.out.println("Arquivo de disciplinas não encontrado. Criando um novo.");
+            System.out.println("Arquivo de disciplinas não encontrado.");
             return;
         }
-        disciplinas.clear(); // Limpa a lista antes de carregar
+        disciplinas.clear(); 
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
@@ -230,18 +231,16 @@ public class SistemaAcademico {
     private static void carregarTurmas() {
         File arquivo = new File(ARQUIVO_TURMAS);
         if (!arquivo.exists()) {
-            System.out.println("Arquivo de turmas não encontrado. Criando um novo.");
+            System.out.println("Arquivo de turmas não encontrado.");
             return;
         }
-        turmas.clear(); // Limpa a lista antes de carregar
+        turmas.clear(); 
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 Turma turma = Turma.fromString(linha);
                 if (turma != null) {
                     turmas.add(turma);
-                    // A re-associação de Professor, Disciplina e Alunos da turma
-                    // será feita em 'reassociarDadosDasTurmas()'
                 }
             }
             System.out.println("Turmas carregadas: " + turmas.size());
@@ -268,10 +267,10 @@ public class SistemaAcademico {
     private static void carregarHistoricosAcademicos() {
         File arquivo = new File(ARQUIVO_HISTORICOS);
         if (!arquivo.exists()) {
-            System.out.println("Arquivo de históricos acadêmicos não encontrado. Será criado um novo ao salvar.");
+            System.out.println("Arquivo de históricos acadêmicos não encontrado.");
             return;
         }
-        historicosAcademicos.clear(); // Limpa a lista antes de carregar
+        historicosAcademicos.clear(); 
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
@@ -283,7 +282,6 @@ public class SistemaAcademico {
                     Aluno aluno = buscarAlunoPorMatricula(historico.getMatriculaAluno());
 
                     if (aluno != null) {
-                        // Chama o método correto em Aluno.java (que você já me confirmou)
                         aluno.adicionarHistoricoTurma(historico.getCodigoTurma(), historico);
                     } else {
                         System.err.println("Aviso: Aluno com matrícula " + historico.getMatriculaAluno() + " não encontrado para associar histórico de turma: " + historico.getCodigoTurma());
@@ -349,15 +347,10 @@ public class SistemaAcademico {
 
     private static void carregarTodosOsDados() {
         criarPastaDados();
-        // Ordem de carregamento: Entidades independentes primeiro
         carregarAlunos();
         carregarProfessores();
         carregarDisciplinas();
-
-        // Em seguida, entidades que dependem das primeiras
         carregarTurmas();
-
-        // Após carregar as turmas, é essencial reassociar os objetos completos
         reassociarDadosDasTurmas();
         carregarHistoricosAcademicos();
     }

@@ -69,7 +69,7 @@ public class MenuProfessor {
             System.out.println("Nenhum professor cadastrado.");
             return;
         }
-        System.out.println("\n=== Lista de Professores ===");
+        System.out.println("\n--- Lista de Professores ---");
         for (Professor p : professores) {
             System.out.println("Matrícula: " + p.getMatricula() + " | Nome: " + p.getNome() + " | Departamento: " + p.getDepartamento());
         }

@@ -6,21 +6,20 @@ import java.util.Map;
 public class CalculoAcademicoService {
     public double calcularMediaFinal(HistoricoAcademicoTurma historico, int tipoMedia) {
         if (historico == null || historico.getNotas().isEmpty()) {
-            return 0.0; // Aluno sem notas ou histórico
+            return 0.0; 
         }
 
         Map<String, Double> notas = historico.getNotas();
         double media = 0.0;
 
         switch (tipoMedia) {
-            case 1: // Exemplo de cálculo Tipo A: Média simples de P1, P2, P3. Substitutiva (S) pode substituir a menor das três.
+            case 1: 
                 double p1 = notas.getOrDefault("P1", 0.0);
                 double p2 = notas.getOrDefault("P2", 0.0);
                 double p3 = notas.getOrDefault("P3", 0.0);
-                double lista = notas.getOrDefault("L", 0.0); // Nota de Lista
+                double lista = notas.getOrDefault("L", 0.0); 
                 double substitutiva = notas.getOrDefault("S", 0.0);
 
-                // Lógica para substituir a menor nota (se houver S e for maior que a menor de P1, P2, P3)
                 if (substitutiva > 0) { 
                     double menorProva = Math.min(p1, Math.min(p2, p3));
                     if (substitutiva > menorProva) {
@@ -35,11 +34,11 @@ public class CalculoAcademicoService {
                 }
                 break;
 
-            case 2: // Exemplo de cálculo Tipo B: P1 com peso 2, P2 com peso 3, P3 com peso 5
+            case 2: 
                 p1 = notas.getOrDefault("P1", 0.0);
                 p2 = notas.getOrDefault("P2", 0.0);
                 p3 = notas.getOrDefault("P3", 0.0);
-                lista = notas.getOrDefault("L", 0.0); // Nota de Lista
+                lista = notas.getOrDefault("L", 0.0); 
                 substitutiva = notas.getOrDefault("S", 0.0);
 
                 if (substitutiva > 0) {
@@ -51,14 +50,14 @@ public class CalculoAcademicoService {
                     }
                 }
 
-                // Cálculo ponderado para o Tipo B
+                
                 media = (p1 * 2 + p2 * 3 + p3 * 5) / (2 + 3 + 5); 
                 if (lista > 0) { 
                     media = (media * 10 + lista * 2) / (10 + 2); 
                 }
                 break;
 
-            default: // Caso tipoMedia seja desconhecido, volta para a média simples original
+            default: 
                 double somaNotas = 0.0;
                 int countNotas = 0;
                 if (notas.containsKey("P1")) { 

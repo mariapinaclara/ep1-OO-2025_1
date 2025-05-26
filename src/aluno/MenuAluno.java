@@ -56,10 +56,9 @@ public class MenuAluno {
         System.out.print("Matrícula: ");
         String matricula = scanner.nextLine();
 
-        // --- NOVO: Peça a idade ---
         System.out.print("Idade: ");
         int idade = scanner.nextInt();
-        scanner.nextLine(); // Consome a quebra de linha restante
+        scanner.nextLine(); 
 
         System.out.print("Curso: ");
         String curso = scanner.nextLine();
@@ -76,10 +75,8 @@ public class MenuAluno {
 
         Aluno novoAluno;
         if (especial.equalsIgnoreCase("s")) {
-            // --- MODIFICADO: Passe idade para o construtor de AlunoEspecial ---
             novoAluno = new AlunoEspecial(nome, matricula, idade, curso);
         } else {
-            // --- MODIFICADO: Passe idade para o construtor de Aluno ---
             novoAluno = new Aluno(nome, matricula, idade, curso);
         }
 
@@ -93,7 +90,7 @@ public class MenuAluno {
             return;
         }
 
-        System.out.println("\n===   Lista de alunos ===");
+        System.out.println("\n--- Lista de alunos ---");
         for (Aluno aluno : alunos) {
             String tipo = (aluno instanceof AlunoEspecial) ? "Especial" : "Normal";
             System.out.println("Tipo: " + tipo + " | Nome: " + aluno.getNome() + " | Matrícula: " + aluno.getMatricula() + " | Curso: " + aluno.getCurso());
@@ -117,7 +114,7 @@ public class MenuAluno {
             return;
         }
 
-        System.out.println("\n=== Histórico de " + alunoEncontrado.getNome() + " ===");
+        System.out.println("\n--- Histórico de " + alunoEncontrado.getNome() + " ---");
 
         List<HistoricoAcademicoTurma> historicosDoAluno = historicosAcademicos.stream().filter(h -> h.getMatriculaAluno().equalsIgnoreCase(matricula)).collect(java.util.stream.Collectors.toList());
 
@@ -127,7 +124,7 @@ public class MenuAluno {
         }
 
         for (HistoricoAcademicoTurma hist : historicosDoAluno) {
-            System.out.println("\n- Turma: " + hist.getCodigoTurma());
+            System.out.println("\n Turma: " + hist.getCodigoTurma());
 
             Turma turmaRelacionada = turmas.stream().filter(t -> t.getCodigo().equals(hist.getCodigoTurma())).findFirst().orElse(null);
 

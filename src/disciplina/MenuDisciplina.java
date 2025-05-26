@@ -70,7 +70,7 @@ public class MenuDisciplina {
             System.out.println("Nenhuma disciplina cadastrada.");
             return;
         }
-        System.out.println("\n=== Lista de Disciplinas ===");
+        System.out.println("\n--- Lista de Disciplinas ---");
         for (Disciplina d : disciplinas) {
             System.out.println("Código: " + d.getCodigo() + " | Nome: " + d.getNome() + " | Créditos: " + d.getCreditos());
         }

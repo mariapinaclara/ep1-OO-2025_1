@@ -40,7 +40,6 @@ public class Avaliacao {
         return notas;
     }
 
-    // Salvar avaliações em arquivo
     public void salvar(String caminhoArquivo) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(caminhoArquivo))) {
             pw.println(codigoTurma + "|" + descricao + "|" + peso);
@@ -52,7 +51,6 @@ public class Avaliacao {
         }
     }
 
-   // Método para salvar uma lista de Avaliacao num arquivo
     public static void salvarLista(List<Avaliacao> lista, String caminhoArquivo) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(caminhoArquivo))) {
             for (Avaliacao av : lista) {
@@ -60,7 +58,7 @@ public class Avaliacao {
                     for (Map.Entry<String, Double> nota : av.getNotas().entrySet()) {
                         pw.println(nota.getKey() + "|" + nota.getValue());
                     }
-                pw.println("---"); // separador entre avaliações
+                pw.println("---"); 
             }
         } catch (IOException e) {
             System.out.println("Erro ao salvar avaliações: " + e.getMessage());

@@ -20,7 +20,7 @@ public class MenuFrequencia {
     }
 
     public void exibirMenu() {
-        System.out.println("\n=== Lançar Notas e Gerenciar Faltas ===");
+        System.out.println("\n--- Lançar Notas e Gerenciar Faltas ---");
         System.out.print("Digite a matrícula do aluno: ");
         String matriculaAluno = scanner.nextLine();
 
@@ -50,13 +50,13 @@ public class MenuFrequencia {
         }
 
         if (!alunoMatriculadoNaTurma) {
-            System.out.println("Erro: Aluno não está matriculado nesta turma. Matricule-o primeiro.");
+            System.out.println("Erro: Aluno não está matriculado nesta turma.");
             return;
         }
 
         HistoricoAcademicoTurma historico = aluno.getHistoricoTurma(codigoTurma);
         if (historico == null) {
-            historico = new HistoricoAcademicoTurma(matriculaAluno, codigoTurma, turma.getCargaHoraria());
+           historico = new HistoricoAcademicoTurma(matriculaAluno, codigoTurma, turma.getCargaHoraria(), turma.getTipoMedia());
             aluno.adicionarHistoricoTurma(codigoTurma, historico);
             this.historicosAcademicos.add(historico); 
             System.out.println("Aviso: Histórico acadêmico para este aluno e turma criado agora.");
@@ -64,7 +64,7 @@ public class MenuFrequencia {
 
         int subOpcao;
         do {
-            System.out.println("\n=== Operações para " + aluno.getNome() + " na Turma " + turma.getCodigo() + " ===");
+            System.out.println("\n--- Operações para " + aluno.getNome() + " na Turma " + turma.getCodigo() + " ---");
             System.out.println("1. Lançar Nota");
             System.out.println("2. Registrar Falta");
             System.out.println("0. Voltar");

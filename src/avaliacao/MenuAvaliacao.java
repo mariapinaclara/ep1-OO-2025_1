@@ -48,14 +48,14 @@ public class MenuAvaliacao {
         System.out.print("Descrição da avaliação: ");
         String descricao = scanner.nextLine();
 
-        System.out.print("Peso da avaliação (ex: 0,4): ");
+        System.out.print("Peso da avaliação (ex: 0.4): ");
         double peso = scanner.nextDouble();
         scanner.nextLine();
 
         Avaliacao nova = new Avaliacao(codigoTurma, descricao, peso);
         avaliacoes.add(nova);
 
-        salvarAvaliacoes();  // Salva lista completa
+        salvarAvaliacoes();  
         System.out.println("Avaliação criada e salva com sucesso.");
     }
 
@@ -91,7 +91,7 @@ public class MenuAvaliacao {
         scanner.nextLine();
 
         av.lancarNota(matricula, nota);
-        salvarAvaliacoes();  // Salva lista completa
+        salvarAvaliacoes();  
         System.out.println("Nota lançada com sucesso.");
     }
 

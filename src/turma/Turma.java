@@ -104,7 +104,7 @@ public class Turma {
             this.alunosMatriculados.add(aluno);
             System.out.println("Aluno " + aluno.getNome() + " matriculado na turma " + this.codigo);
 
-            HistoricoAcademicoTurma novoHistorico = new HistoricoAcademicoTurma(aluno.getMatricula(), this.codigo, this.cargaHoraria);
+           HistoricoAcademicoTurma novoHistorico = new HistoricoAcademicoTurma(aluno.getMatricula(), this.codigo, this.cargaHoraria, this.tipoMedia);
             aluno.adicionarHistoricoTurma(this.codigo, novoHistorico);
         } else if (aluno != null) {
             System.out.println("Aluno " + aluno.getNome() + " já está matriculado na turma " + this.codigo);

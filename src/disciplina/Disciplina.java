@@ -51,13 +51,13 @@ public class Disciplina {
     public static Disciplina fromString(String linha) {
         String[] partes = linha.split("\\|");
         if (partes.length != 3) {
-            System.err.println("Formato de linha inválido para Disciplina: " + linha);
+            System.err.println("Erro de formato de linha da Disciplina: '" + linha);
             return null;
         }
         try {
             return new Disciplina(partes[0], partes[1], Integer.parseInt(partes[2]));
         } catch (NumberFormatException e) {
-            System.err.println("Erro ao converter créditos da disciplina: " + e.getMessage() + " na linha: " + linha);
+            System.err.println("Erro de conversão de créditos na Disciplina: " + e.getMessage());
             return null;
         }
     }
