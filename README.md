@@ -37,49 +37,77 @@ javac com/seuprojeto/**/*.java'
 │   │   │       └── sistemaacademico/ 
 
 │   │   │           ├── aluno/ 
+
 │   │   │           │   ├── Aluno.java 
+
 │   │   │           │   ├── AlunoEspecial.java 
+
 │   │   │           │   ├── HistoricoAcademicoTurma.java 
+
 │   │   │           │   └── MenuAluno.java 
 
 │   │   │           ├── avaliacao/ 
+
 │   │   │           │   ├── Avaliacao.java 
+
 │   │   │           │   └── MenuAvaliacao.java 
 
+
 │   │   │           ├── disciplina/ 
+
 │   │   │           │   ├── Disciplina.java 
+
 │   │   │           │   └── MenuDisciplina.java 
 
+
 │   │   │           ├── frequencia/ 
+
 │   │   │           │   ├── Frequencia.java 
+
 │   │   │           │   └── MenuFrequencia.java 
 
 │   │   │           ├── professor/ 
+
 │   │   │           │   ├── Professor.java 
+
 │   │   │           │   └── MenuProfessor.java 
 
 │   │   │           ├── relatorios/ 
+
 │   │   │           │   ├── CalculoAcademicoService.java 
+
 │   │   │           │   ├── MenuRelatorio.java 
+
 │   │   │           │   └── RelatorioAcademicoService.java
 
 │   │   │           ├── turma/ 
+
 │   │   │           │   ├── Turma.java 
+
 │   │   │           │   └── MenuTurma.java
 
 │   │   │           ├── util/   
+
 │   │   │           │   └── PersistenciaUtils.java 
+
 │   │   │           └── SistemaAcademico.java 
 
 │   │   └── resources/ 
+
 │   │       └── dados/ 
+
 │   │           ├── alunos.txt 
+
 │   │           ├── disciplinas.txt 
+
 │   │           ├── historicos.txt 
+
 │   │           ├── professores.txt 
+
 │   │           └── turmas.txt 
 
 ├── .gitignore 
+
 └── README.md 
 
 4. **Versão do JAVA utilizada:**  
