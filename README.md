@@ -124,7 +124,8 @@ javac com/seuprojeto/**/*.java'
 ## Prints da Execução
 
 1. Menu Principal:  
-   ![Inserir Print 1](caminho/do/print1.png)
+  ![Menu Principal](https://github.com/user-attachments/assets/410011db-e8b7-4ff6-b7fd-145ce3af23c2)
+
 
 2. Cadastro de Aluno:  
    ![Inserir Print 2](caminho/do/print2.png)
