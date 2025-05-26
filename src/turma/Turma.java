@@ -19,6 +19,8 @@ public class Turma {
     private int cargaHoraria;
     private int tipoMedia;
     private List<Aluno> alunosMatriculados; 
+    private List<String> matriculasAlunos = new ArrayList<>();
+
 
     public Turma(String codigo, String materia, String codigoDisciplina, String matriculaProfessor, String modalidade, int cargaHoraria, int tipoMedia) {
         this.codigo = codigo;
@@ -87,6 +89,15 @@ public class Turma {
     public void setTipoMedia(int tipoMedia) {
         this.tipoMedia = tipoMedia;
     }
+
+    public List<String> getMatriculasAlunos() {
+    return matriculasAlunos;
+    }
+
+    public void setMatriculasAlunos(List<String> matriculasAlunos) {
+    this.matriculasAlunos = matriculasAlunos;
+    }
+
 
     public void matricularAluno(Aluno aluno) {
         if (aluno != null && !this.alunosMatriculados.contains(aluno)) {

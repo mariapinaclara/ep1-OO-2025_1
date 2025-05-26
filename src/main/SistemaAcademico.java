@@ -359,55 +359,30 @@ public class SistemaAcademico {
 
         // Após carregar as turmas, é essencial reassociar os objetos completos
         reassociarDadosDasTurmas();
-
-        // Por fim, carregue os históricos (eles dependem de Alunos que já devem ter sido carregados)
         carregarHistoricosAcademicos();
     }
 
-    // Método para reassociar os objetos completos (Professor, Disciplina, Alunos) às Turmas
+    
     private static void reassociarDadosDasTurmas() {
         for (Turma turma : turmas) {
-            // Reassociar Professor: Usamos getMatriculaProfessor() diretamente da Turma
             if (turma.getMatriculaProfessor() != null && !turma.getMatriculaProfessor().isEmpty()) {
                 Professor professorReal = buscarProfessorPorMatricula(turma.getMatriculaProfessor());
                 if (professorReal != null) {
-                    // Se Turma precisasse armazenar o objeto Professor: turma.setProfessor(professorReal);
-                    // Mas sua Turma armazena apenas a String da matrícula, então não é necessário um setProfessor(Professor)
-                    // aqui, a menos que você queira adicionar um campo 'Professor objetoProfessor' na Turma.
-                    // Por enquanto, a informação da matrícula já está na Turma, o que é o suficiente para as associações.
                 } else {
                     System.err.println("Aviso: Professor com matrícula " + turma.getMatriculaProfessor() + " não encontrado para a turma " + turma.getCodigo());
                 }
             }
 
-            // Reassociar Disciplina: Usamos getCodigoDisciplina() diretamente da Turma
+            
             if (turma.getCodigoDisciplina() != null && !turma.getCodigoDisciplina().isEmpty()) {
                 Disciplina disciplinaReal = buscarDisciplinaPorCodigo(turma.getCodigoDisciplina());
                 if (disciplinaReal != null) {
-                    // Similar ao Professor, sua Turma armazena apenas a String do código.
-                    // Não é necessário um setDisciplina(Disciplina) aqui.
                 } else {
                     System.err.println("Aviso: Disciplina com código " + turma.getCodigoDisciplina() + " não encontrada para a turma " + turma.getCodigo());
                 }
             }
-
-            // Reassociar Alunos Matriculados na Turma
-            // Este bloco é para associar os objetos Aluno COMPLETO à lista de alunos matriculados na Turma,
-            // caso o Turma.fromString tenha carregado apenas as matrículas ou "alunos placeholder".
-            // Sua Turma.java não armazena alunos matriculados no toString/fromString,
-            // então esta lista estaria vazia após o fromString.
-            // A matrícula de alunos na turma é feita no MenuTurma.matricularAluno().
-            // Se você precisa que a Turma mantenha uma lista de objetos Aluno completos após o carregamento,
-            // o `fromString` da Turma e seu `toString` precisariam ser ajustados para salvar/carregar as matrículas dos alunos.
-            // Por enquanto, a lógica assume que a lista `alunosMatriculados` da Turma é populada durante a execução
-            // e não é persistida diretamente com a turma.
-            // Se você quer persistir os alunos matriculados dentro da Turma, precisará de:
-            // 1. Uma forma de salvar as matrículas dos alunos no toString da Turma.
-            // 2. Uma forma de ler essas matrículas no fromString da Turma e criar objetos Aluno "placeholder".
-            // 3. Este loop de re-associação continuaria sendo necessário para substituir os placeholders pelos objetos Aluno completos.
         }
     }
-
 
     private static void salvarTodosOsDados() {
         salvarAlunos();
