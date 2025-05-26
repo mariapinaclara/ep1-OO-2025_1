@@ -3,31 +3,28 @@ package main;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map; 
-import java.util.Scanner;
-import java.util.stream.Collectors;
+import java.util.Scanner; 
 
 import aluno.Aluno;
-import aluno.AlunoEspecial;
+import aluno.AlunoEspecial; // Para AlunoEspecial, se você o tiver
 import aluno.HistoricoAcademicoTurma;
 import aluno.MenuAluno;
 import disciplina.Disciplina;
 import disciplina.MenuDisciplina;
 import professor.Professor;
 import professor.MenuProfessor;
-import turma.Turma;
+import turma.Turma; // Certifique-se que o pacote está correto
 import turma.MenuTurma;
 import frequencia.MenuFrequencia;
 import relatorios.CalculoAcademicoService;
 import relatorios.MenuRelatorio;
-import relatorios.RelatorioAcademicoService;
 
 public class SistemaAcademico {
     private static List<Aluno> alunos = new ArrayList<>();
     private static List<Professor> professores = new ArrayList<>();
     private static List<Disciplina> disciplinas = new ArrayList<>();
     private static List<Turma> turmas = new ArrayList<>();
-    private static List<HistoricoAcademicoTurma> historicosAcademicos = new ArrayList<>(); 
+    private static List<HistoricoAcademicoTurma> historicosAcademicos = new ArrayList<>();
 
     private static final String PASTA_DADOS = "dados/";
     private static final String ARQUIVO_ALUNOS = PASTA_DADOS + "alunos.txt";
@@ -42,8 +39,6 @@ public class SistemaAcademico {
         carregarTodosOsDados();
 
         CalculoAcademicoService calculoAcademicoService = new CalculoAcademicoService();
-
-        RelatorioAcademicoService relatorioAcademicoService = new RelatorioAcademicoService(alunos, turmas, disciplinas, professores, historicosAcademicos, calculoAcademicoService);
 
         MenuAluno menuAluno = new MenuAluno(scanner, alunos, turmas, historicosAcademicos);
         MenuDisciplina menuDisciplina = new MenuDisciplina(scanner, disciplinas);
@@ -119,6 +114,7 @@ public class SistemaAcademico {
             System.out.println("Arquivo de alunos não encontrado. Criando um novo.");
             return;
         }
+        alunos.clear(); // Limpa a lista antes de carregar para evitar duplicatas ao recarregar
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
@@ -165,6 +161,7 @@ public class SistemaAcademico {
             System.out.println("Arquivo de professores não encontrado. Criando um novo.");
             return;
         }
+        professores.clear(); // Limpa a lista antes de carregar
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
@@ -200,6 +197,7 @@ public class SistemaAcademico {
             System.out.println("Arquivo de disciplinas não encontrado. Criando um novo.");
             return;
         }
+        disciplinas.clear(); // Limpa a lista antes de carregar
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
@@ -235,12 +233,15 @@ public class SistemaAcademico {
             System.out.println("Arquivo de turmas não encontrado. Criando um novo.");
             return;
         }
+        turmas.clear(); // Limpa a lista antes de carregar
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 Turma turma = Turma.fromString(linha);
                 if (turma != null) {
                     turmas.add(turma);
+                    // A re-associação de Professor, Disciplina e Alunos da turma
+                    // será feita em 'reassociarDadosDasTurmas()'
                 }
             }
             System.out.println("Turmas carregadas: " + turmas.size());
@@ -267,13 +268,13 @@ public class SistemaAcademico {
     private static void carregarHistoricosAcademicos() {
         File arquivo = new File(ARQUIVO_HISTORICOS);
         if (!arquivo.exists()) {
-            System.out.println("Arquivo de históricos acadêmicos não encontrado. Criando um novo.");
+            System.out.println("Arquivo de históricos acadêmicos não encontrado. Será criado um novo ao salvar.");
             return;
         }
+        historicosAcademicos.clear(); // Limpa a lista antes de carregar
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
-                // Aqui você está lendo HistoricoAcademicoTurma
                 HistoricoAcademicoTurma historico = HistoricoAcademicoTurma.fromString(linha);
 
                 if (historico != null) {
@@ -282,9 +283,10 @@ public class SistemaAcademico {
                     Aluno aluno = buscarAlunoPorMatricula(historico.getMatriculaAluno());
 
                     if (aluno != null) {
-                        aluno.adicionarHistoricoTurma(historico.getCodigoTurma(), historico); 
+                        // Chama o método correto em Aluno.java (que você já me confirmou)
+                        aluno.adicionarHistoricoTurma(historico.getCodigoTurma(), historico);
                     } else {
-                        System.err.println("Aluno com matrícula " + historico.getMatriculaAluno() + " não encontrado para associar histórico de turma: " + historico.getCodigoTurma());
+                        System.err.println("Aviso: Aluno com matrícula " + historico.getMatriculaAluno() + " não encontrado para associar histórico de turma: " + historico.getCodigoTurma());
                     }
                 }
             }
@@ -318,6 +320,24 @@ public class SistemaAcademico {
         return null;
     }
 
+    private static Professor buscarProfessorPorMatricula(String matricula) {
+        for (Professor professor : professores) {
+            if (professor.getMatricula().equals(matricula)) {
+                return professor;
+            }
+        }
+        return null;
+    }
+
+    private static Disciplina buscarDisciplinaPorCodigo(String codigo) {
+        for (Disciplina disciplina : disciplinas) {
+            if (disciplina.getCodigo().equals(codigo)) {
+                return disciplina;
+            }
+        }
+        return null;
+    }
+
     private static Turma buscarTurmaPorCodigo(String codigo) {
         for (Turma turma : turmas) {
             if (turma.getCodigo().equals(codigo)) {
@@ -328,13 +348,66 @@ public class SistemaAcademico {
     }
 
     private static void carregarTodosOsDados() {
-        criarPastaDados(); 
+        criarPastaDados();
+        // Ordem de carregamento: Entidades independentes primeiro
         carregarAlunos();
         carregarProfessores();
         carregarDisciplinas();
+
+        // Em seguida, entidades que dependem das primeiras
         carregarTurmas();
+
+        // Após carregar as turmas, é essencial reassociar os objetos completos
+        reassociarDadosDasTurmas();
+
+        // Por fim, carregue os históricos (eles dependem de Alunos que já devem ter sido carregados)
         carregarHistoricosAcademicos();
     }
+
+    // Método para reassociar os objetos completos (Professor, Disciplina, Alunos) às Turmas
+    private static void reassociarDadosDasTurmas() {
+        for (Turma turma : turmas) {
+            // Reassociar Professor: Usamos getMatriculaProfessor() diretamente da Turma
+            if (turma.getMatriculaProfessor() != null && !turma.getMatriculaProfessor().isEmpty()) {
+                Professor professorReal = buscarProfessorPorMatricula(turma.getMatriculaProfessor());
+                if (professorReal != null) {
+                    // Se Turma precisasse armazenar o objeto Professor: turma.setProfessor(professorReal);
+                    // Mas sua Turma armazena apenas a String da matrícula, então não é necessário um setProfessor(Professor)
+                    // aqui, a menos que você queira adicionar um campo 'Professor objetoProfessor' na Turma.
+                    // Por enquanto, a informação da matrícula já está na Turma, o que é o suficiente para as associações.
+                } else {
+                    System.err.println("Aviso: Professor com matrícula " + turma.getMatriculaProfessor() + " não encontrado para a turma " + turma.getCodigo());
+                }
+            }
+
+            // Reassociar Disciplina: Usamos getCodigoDisciplina() diretamente da Turma
+            if (turma.getCodigoDisciplina() != null && !turma.getCodigoDisciplina().isEmpty()) {
+                Disciplina disciplinaReal = buscarDisciplinaPorCodigo(turma.getCodigoDisciplina());
+                if (disciplinaReal != null) {
+                    // Similar ao Professor, sua Turma armazena apenas a String do código.
+                    // Não é necessário um setDisciplina(Disciplina) aqui.
+                } else {
+                    System.err.println("Aviso: Disciplina com código " + turma.getCodigoDisciplina() + " não encontrada para a turma " + turma.getCodigo());
+                }
+            }
+
+            // Reassociar Alunos Matriculados na Turma
+            // Este bloco é para associar os objetos Aluno COMPLETO à lista de alunos matriculados na Turma,
+            // caso o Turma.fromString tenha carregado apenas as matrículas ou "alunos placeholder".
+            // Sua Turma.java não armazena alunos matriculados no toString/fromString,
+            // então esta lista estaria vazia após o fromString.
+            // A matrícula de alunos na turma é feita no MenuTurma.matricularAluno().
+            // Se você precisa que a Turma mantenha uma lista de objetos Aluno completos após o carregamento,
+            // o `fromString` da Turma e seu `toString` precisariam ser ajustados para salvar/carregar as matrículas dos alunos.
+            // Por enquanto, a lógica assume que a lista `alunosMatriculados` da Turma é populada durante a execução
+            // e não é persistida diretamente com a turma.
+            // Se você quer persistir os alunos matriculados dentro da Turma, precisará de:
+            // 1. Uma forma de salvar as matrículas dos alunos no toString da Turma.
+            // 2. Uma forma de ler essas matrículas no fromString da Turma e criar objetos Aluno "placeholder".
+            // 3. Este loop de re-associação continuaria sendo necessário para substituir os placeholders pelos objetos Aluno completos.
+        }
+    }
+
 
     private static void salvarTodosOsDados() {
         salvarAlunos();
