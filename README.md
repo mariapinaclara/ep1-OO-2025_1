@@ -134,7 +134,10 @@ javac com/seuprojeto/**/*.java'
 
 
 4. Relatório de Frequência/Notas:  
-   ![Inserir Print 3](caminho/do/print3.png)
+  ![Relatorio da Turma](https://github.com/user-attachments/assets/9cd04cd2-7dd9-494f-b1f5-db8894cde294)
+  ![Boletim](https://github.com/user-attachments/assets/dd63b26c-2c3f-4d9d-9f75-b19312270cfc)
+
+
 
 ---
 
